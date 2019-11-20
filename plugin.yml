@@ -2,4 +2,4 @@ name: MobSpawnLimit
 main: com.Zenya.MobSpawnLimit.Main
 version: 1.0.1
 author: Zenya4
-api-version: 1.13
+api-version: 1.14
