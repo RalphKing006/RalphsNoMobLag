@@ -1,0 +1,25 @@
+# Do not change this
+config-version: 1
+# Chance to spawn mob at specific TPS
+spawn-chance:
+  20: 100
+  19: 75
+  18: 50
+  17: 35
+  16: 25
+  15: 15
+  14: 10
+  13: 5
+  12: 0
+  11: 0
+  10: 0
+  9: 0
+  8: 0
+  7: 0
+  6: 0
+  5: 0
+  4: 0
+  3: 0
+  2: 0
+  1: 0
+  0: 0

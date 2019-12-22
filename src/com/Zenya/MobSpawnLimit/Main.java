@@ -6,12 +6,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-	
+	public static Main instance;
+
 	public static float tps = 20.0f;
 	//public float atps = 0.0f;
 	
 	@Override
 	public void onEnable() {
+		instance = this;
+		new ConfigManager(this);
+
 		Bukkit.getServer().getPluginManager().registerEvents(new Limiter(/*this*/), this);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			
@@ -58,7 +62,6 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		Bukkit.getScheduler().cancelTasks(this);
 	}
-
 }
 
 //tps = passed ticks / (end time - start time) * 1000

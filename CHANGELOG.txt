@@ -2,3 +2,5 @@
 - Initial release
 1.0.1:
 - Added support for 1.14.x
+1.1.0:
+- Added support for configuration and rewrote some code
