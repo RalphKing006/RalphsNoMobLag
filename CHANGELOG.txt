@@ -1,6 +1,11 @@
 1.0.0:
 - Initial release
+
 1.0.1:
 - Added support for 1.14.x
+
 1.1.0:
 - Added support for configuration and rewrote some code
+
+1.1.1:
+- Added compatibility for 1.13.x - 1.15.x
