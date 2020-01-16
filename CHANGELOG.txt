@@ -8,4 +8,7 @@
 - Added support for configuration and rewrote some code
 
 1.1.1:
-- Added compatibility for 1.13.x - 1.15.x
+- Added compatibility for 1.13.x - 1.15.
+
+1.1.2:
+- Fixed plugin sometimes not working for versions 1.13.x - 1.14.x
