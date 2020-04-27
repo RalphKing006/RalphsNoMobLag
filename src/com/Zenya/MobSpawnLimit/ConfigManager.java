@@ -18,6 +18,12 @@ public class ConfigManager {
         if(!(this.getConfigExists())) {
             plugin.saveDefaultConfig();
         }
+
+        File configFile = new File(plugin.getDataFolder(), "config.yml");
+        if(!plugin.getConfig().contains("config-version") || plugin.getConfig().getInt("config-version") != 2) {
+            configFile.delete();
+            plugin.saveDefaultConfig();
+        }
     }
 
     private boolean getConfigExists() {

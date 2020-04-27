@@ -12,7 +12,7 @@ public class Limiter implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void SpawnEvent(CreatureSpawnEvent e) {
-		if (e.getSpawnReason() == SpawnReason.SPAWNER) {
+		if ((Main.instance.getConfig().getBoolean("reduce-spawner-only") && e.getSpawnReason() == SpawnReason.SPAWNER) || (!Main.instance.getConfig().getBoolean("reduce-spawner-only"))) {
 			int tps = (int) Main.tps;
 			Random randObj = new Random();
 			int randNum = randObj.nextInt(100) + 1;

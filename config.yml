@@ -1,5 +1,9 @@
 # Do not change this
-config-version: 1
+config-version: 2
+
+# Whether or not to only reduce mob-spawner spawns during low TPS. If false, all natural mob spawning will be reduced on low TPS
+reduce-spawner-only: true
+
 # Chance to spawn mob at specific TPS
 spawn-chance:
   20: 100

@@ -12,3 +12,6 @@
 
 1.1.2:
 - Fixed plugin sometimes not working for versions 1.13.x - 1.14.x
+
+1.1.3:
+- Added an option in config.yml to reduce mob spawning from all sources (not only spawners) when TPS is low
