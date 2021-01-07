@@ -18,3 +18,7 @@
 
 1.1.4:
 - Added 1.16.3 support
+
+2.0.0:
+- Complete rewrite
+- Changed plugin name to NoMobLag

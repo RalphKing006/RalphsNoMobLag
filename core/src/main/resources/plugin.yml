@@ -1,0 +1,48 @@
+name: NoMobLag
+main: com.zenya.nomoblag.NoMobLag
+version: 2.0.0
+author: Zenya4
+api-version: 1.13
+
+commands:
+  nomoblag:
+    description: Main command for NoMobLag
+    aliases:
+      - nml
+    permission: nomoblag.command.help
+    usage: /<command>
+
+permissions:
+  nomoblag.*:
+    children:
+      nomoblag.command.help: true
+      nomoblag.command.stats: true
+      nomoblag.command.reload: true
+      nomoblag.command.freeze: true
+      nomoblag.command.unfreeze: true
+      nomoblag.command.setcollisions: true
+      nomoblag.command.loadspawners: true
+  nomoblag.command.*:
+    children:
+      nomoblag.command.help: true
+      nomoblag.command.stats: true
+      nomoblag.command.reload: true
+      nomoblag.command.freeze: true
+      nomoblag.command.unfreeze: true
+      nomoblag.command.setcollisions: true
+      nomoblag.command.loadspawners: true
+  nomoblag.command.help:
+    default: op
+  nomoblag.command.stats:
+    default: op
+  nomoblag.command.reload:
+    default: op
+  nomoblag.command.freeze:
+    default: op
+  nomoblag.command.unfreeze:
+    default: op
+  nomoblag.command.setcollisions:
+    default: op
+  nomoblag.command.loadspawners:
+    default: op
+
