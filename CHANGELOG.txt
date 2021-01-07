@@ -22,3 +22,6 @@
 2.0.0:
 - Complete rewrite
 - Changed plugin name to NoMobLag
+
+2.0.1:
+- Minor fix with messages.yml version
