@@ -25,3 +25,6 @@
 
 2.0.1:
 - Minor fix with messages.yml version
+
+2.0.2
+- Added WorldBorder compatibility to remove console spam during world pregeneration
