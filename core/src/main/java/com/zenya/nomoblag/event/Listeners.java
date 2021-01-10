@@ -26,7 +26,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -103,11 +102,15 @@ public class Listeners implements Listener {
     @EventHandler
     public void onProjectileLaunchEvent(ProjectileLaunchEvent e) {
         Projectile proj = e.getEntity();
+        int cancelAfter = 20*10;
 
         new BukkitRunnable() {
+            int count = 0;
             @Override
             public void run() {
-                if(proj == null || proj.isDead() || proj.isOnGround()) this.cancel();
+                count++;
+                if(count >= cancelAfter) this.cancel();
+                if(proj.isDead() || proj.isOnGround()) this.cancel();
 
                 for(Entity ent : proj.getNearbyEntities(2, 2, 2)) {
                     if(ent instanceof LivingEntity) {
