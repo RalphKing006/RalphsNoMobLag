@@ -37,3 +37,6 @@
 - Made improvements to mob unfreezing detection when player is nearby
 - Entity freeze and despawn scheduler tasks are now asynchronous
 
+2.1.1:
+- Fixed a crucial performance issue with a plugin task running indefinitely
+
