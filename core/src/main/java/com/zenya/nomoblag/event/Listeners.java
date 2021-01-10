@@ -122,23 +122,6 @@ public class Listeners implements Listener {
         }.runTaskTimer(NoMobLag.getInstance(), 0, 1);
     }
 
-    //Call PlayerChunkChangeEvent
-    @EventHandler
-    public void onPlayerMoveEvent(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        final int oldChunkX = player.getLocation().getChunk().getX();
-        final int oldChunkZ = player.getLocation().getChunk().getZ();
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Chunk currentChunk = player.getLocation().getChunk();
-                if(currentChunk.getX() == oldChunkX && currentChunk.getZ() == oldChunkZ) return;
-                Bukkit.getPluginManager().callEvent(new PlayerChunkChangeEvent(player, currentChunk));
-            }
-        }.runTaskLater(NoMobLag.getInstance(), 1);
-    }
-
     //Enforce mob (un)freezing on chunk load
     //Enforce (lack of) mob collision on chunk load
     @EventHandler
@@ -259,20 +242,57 @@ public class Listeners implements Listener {
         //Enforce anti-portal farm
         if(ConfigManager.getInstance().getBool("spawn-treshold.farms.block-portal-farm")) {
             if(e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NETHER_PORTAL)) {
-                if(e.getEntity().getType().equals(EntityType.valueOf("PIG_ZOMBIE")) || e.getEntity().getType().equals(EntityType.valueOf("ZOGLIN")) || e.getEntity().getType().equals(EntityType.valueOf("DROWNED"))) {
-                    e.setCancelled(true);
-                    return;
+                try {
+                    //Post-1.13 only
+                    if (e.getEntity().getType().equals(EntityType.valueOf("DROWNED"))) {
+                        e.setCancelled(true);
+                    }
+                } catch(IllegalArgumentException exc) {
+                    //Silence errors
                 }
+
+                try {
+                    //Pre-1.16 only
+                    if(e.getEntity().getType().equals(EntityType.valueOf("PIG_ZOMBIE"))) {
+                        e.setCancelled(true);
+                    }
+                } catch(IllegalArgumentException exc) {
+                    //Silence errors
+                }
+
+                try {
+                    //Post-1.16 only
+                    if(e.getEntity().getType().equals(EntityType.valueOf("ZOGLIN"))) {
+                        e.setCancelled(true);
+                    }
+                } catch(IllegalArgumentException exc) {
+                    //Silence errors
+                }
+                return;
             }
         }
         //Enforce anti-pigman reinforcement farm
         if(ConfigManager.getInstance().getBool("spawn-treshold.farms.block-pigman-farm")) {
             if(e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.REINFORCEMENTS)) {
                 if(e.getEntity().getWorld().getEnvironment().equals(World.Environment.NETHER)) {
-                    if(e.getEntity().getType().equals(EntityType.valueOf("PIG_ZOMBIE")) || e.getEntity().getType().equals(EntityType.valueOf("ZOGLIN"))) {
-                        e.setCancelled(true);
-                        return;
+                    try {
+                        //Pre-1.16 only
+                        if(e.getEntity().getType().equals(EntityType.valueOf("PIG_ZOMBIE"))) {
+                            e.setCancelled(true);
+                        }
+                    } catch(IllegalArgumentException exc) {
+                        //Silence errors
                     }
+
+                    try {
+                        //Post-1.16 only
+                        if(e.getEntity().getType().equals(EntityType.valueOf("ZOGLIN"))) {
+                            e.setCancelled(true);
+                        }
+                    } catch(IllegalArgumentException exc) {
+                        //Silence errors
+                    }
+                    return;
                 }
             }
         }

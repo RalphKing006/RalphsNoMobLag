@@ -7,7 +7,8 @@ public class TaskManager {
     private HashMap<TaskKey, NMLTask> taskMap = new HashMap<TaskKey, NMLTask>();
 
     public TaskManager() {
-        registerTask(TrackTPSTask.getInstance().getKey(), TrackTPSTask.getInstance());
+        registerTask(TaskKey.TRACK_TPS_TASK, TrackTPSTask.getInstance());
+        registerTask(TaskKey.TRACK_PLAYER_CHUNK_TASK, TrackPlayerChunkTask.getInstance());
     }
 
     public NMLTask getTask(TaskKey key) {
