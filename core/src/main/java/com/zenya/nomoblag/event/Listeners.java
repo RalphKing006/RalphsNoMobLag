@@ -107,7 +107,7 @@ public class Listeners implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if(proj == null || proj.isDead()) this.cancel();
+                if(proj == null || proj.isDead() || proj.isOnGround()) this.cancel();
 
                 for(Entity ent : proj.getNearbyEntities(2, 2, 2)) {
                     if(ent instanceof LivingEntity) {

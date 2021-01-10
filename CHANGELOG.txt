@@ -44,3 +44,6 @@
 - Fixed console spam with unsupported entities on some spigot versions
 - Performance fixes with player chunk tracking
 
+2.1.3:
+- Patched performance issue not being properly fixed in v2.1.1
+
