@@ -8,6 +8,7 @@ import com.zenya.nomoblag.file.ConfigManager;
 import com.zenya.nomoblag.file.MessagesManager;
 import com.zenya.nomoblag.scheduler.DespawnEntityTask;
 import com.zenya.nomoblag.scheduler.FreezeEntityTask;
+import com.zenya.nomoblag.scheduler.SetCollidableTask;
 import com.zenya.nomoblag.scheduler.TrackTPSTask;
 import com.zenya.nomoblag.util.ChatUtils;
 import com.zenya.nomoblag.util.LocationUtils;
@@ -15,9 +16,7 @@ import com.zenya.nomoblag.util.MetaUtils;
 import com.zenya.nomoblag.util.SpawnerUtils;
 import org.bukkit.*;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,13 +24,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class Listeners implements Listener {
@@ -82,7 +80,6 @@ public class Listeners implements Listener {
         LivingEntity entity = (LivingEntity) e.getRightClicked();
         ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
         if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
-            entity.setAI(true);
             new FreezeEntityTask(entity);
         }
     }
@@ -98,34 +95,77 @@ public class Listeners implements Listener {
         LivingEntity entity = (LivingEntity) e.getEntity();
         ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
         if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
-            entity.setAI(true);
             new FreezeEntityTask(entity);
         }
     }
 
+    //Fix projectiles not hitting entities when collision is disabled
+    @EventHandler
+    public void onProjectileLaunchEvent(ProjectileLaunchEvent e) {
+        Projectile proj = e.getEntity();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(proj.isDead()) this.cancel();
+
+                for(Entity ent : proj.getNearbyEntities(2, 2, 2)) {
+                    if(ent instanceof LivingEntity) {
+                        try {
+                            new SetCollidableTask((LivingEntity) ent);
+                        } catch(NoSuchMethodError exc) {
+                            //Silence 1.8 errors
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(NoMobLag.getInstance(), 0, 1);
+    }
+
+    //Call PlayerChunkChangeEvent
+    @EventHandler
+    public void onPlayerMoveEvent(PlayerMoveEvent e) {
+        Player player = e.getPlayer();
+        final int oldChunkX = player.getLocation().getChunk().getX();
+        final int oldChunkZ = player.getLocation().getChunk().getZ();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Chunk currentChunk = player.getLocation().getChunk();
+                if(currentChunk.getX() == oldChunkX && currentChunk.getZ() == oldChunkZ) return;
+                Bukkit.getPluginManager().callEvent(new PlayerChunkChangeEvent(player, currentChunk));
+            }
+        }.runTaskLater(NoMobLag.getInstance(), 1);
+    }
+
     //Enforce mob (un)freezing on chunk load
     //Enforce (lack of) mob collision on chunk load
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onChunkLoadEvent(ChunkLoadEvent e) {
-        Entity[] entities = e.getChunk().getEntities();
-        if(entities == null || entities.length == 0) return;
+    @EventHandler
+    public void onPlayerChunkChangeEvent(PlayerChunkChangeEvent e) {
+        ArrayList<LivingEntity> mobs = new ArrayList<>();
+        for(Chunk chunk : e.getNearbyChunks(1)) {
+            for(Entity ent: chunk.getEntities()) {
+                if(ent instanceof LivingEntity) {
+                    mobs.add((LivingEntity) ent);
+                }
+            }
+        }
+        if(mobs == null || mobs.size() == 0) return;
 
         //Enforce mob collidability
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
-                    for(Entity ent : entities) {
-                        if(ent instanceof LivingEntity) {
-                            LivingEntity entity = (LivingEntity) ent;
-                            ArrayList<String> collidableMobs = ConfigManager.getInstance().getList("mob-collisions.force-collision-mobs");
-                            if((collidableMobs == null) || (collidableMobs.size() == 0) || !(collidableMobs.contains(entity.getType().name()))) {
-                                entity.setCollidable(!ConfigManager.getInstance().getBool("mob-collisions.disable-mob-collision"));
-                            }
+                for(LivingEntity mob : mobs) {
+                    ArrayList<String> collidableMobs = ConfigManager.getInstance().getList("mob-collisions.force-collision-mobs");
+                    if((collidableMobs == null) || (collidableMobs.size() == 0) || !(collidableMobs.contains(mob.getType().name()))) {
+                        try {
+                            mob.setCollidable(!ConfigManager.getInstance().getBool("mob-collisions.disable-mob-collision"));
+                        } catch(NoSuchMethodError exc) {
+                            //Silence 1.8 errors
                         }
                     }
-                } catch(NoSuchElementException exc) {
-                    //Silence errors
                 }
             }
         }.runTaskAsynchronously(NoMobLag.getInstance());
@@ -135,15 +175,8 @@ public class Listeners implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    try {
-                        for(Entity ent : entities) {
-                            if(ent instanceof LivingEntity) {
-                                LivingEntity entity = (LivingEntity) ent;
-                                entity.setAI(true);
-                            }
-                        }
-                    } catch(NoSuchElementException exc) {
-                        //Silence errors
+                    for(LivingEntity mob : mobs) {
+                        mob.setAI(true);
                     }
                 }
             }.runTaskAsynchronously(NoMobLag.getInstance());
@@ -155,19 +188,11 @@ public class Listeners implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    try {
-                        for(Entity ent : entities) {
-                            if(ent instanceof LivingEntity) {
-                                LivingEntity entity = (LivingEntity) ent;
-                                ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-                                if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
-                                    entity.setAI(true);
-                                    new FreezeEntityTask(entity);
-                                }
-                            }
+                    for(LivingEntity mob : mobs) {
+                        ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
+                        if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(mob.getType().name()))) {
+                            new FreezeEntityTask(mob);
                         }
-                    } catch(NoSuchElementException exc) {
-                        //Silence errors
                     }
                 }
             }.runTaskAsynchronously(NoMobLag.getInstance());
@@ -300,7 +325,11 @@ public class Listeners implements Listener {
         LivingEntity entity = e.getEntity();
         ArrayList<String> collidableMobs = ConfigManager.getInstance().getList("mob-collisions.force-collision-mobs");
         if((collidableMobs == null) || (collidableMobs.size() == 0) || !(collidableMobs.contains(entity.getType().name()))) {
-            entity.setCollidable(false);
+            try {
+                entity.setCollidable(false);
+            } catch(NoSuchMethodError exc) {
+                //Silence 1.8 errors
+            }
         }
     }
 
@@ -312,7 +341,6 @@ public class Listeners implements Listener {
         LivingEntity entity = e.getEntity();
         ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
         if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
-            entity.setAI(true);
             new FreezeEntityTask(entity);
         }
     }

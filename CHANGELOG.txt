@@ -28,3 +28,12 @@
 
 2.0.2
 - Added WorldBorder compatibility to remove console spam during world pregeneration
+
+2.1.0:
+- Fixed projectiles not doing damage when entity collision is disabled
+- Fixed command formatting issues
+- Fixed 1.8 compatibility
+- Added /nomoblag stats command
+- Made improvements to mob unfreezing detection when player is nearby
+- Entity freeze and despawn scheduler tasks are now asynchronous
+

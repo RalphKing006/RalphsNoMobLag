@@ -3,6 +3,7 @@ package com.zenya.nomoblag.command;
 import com.zenya.nomoblag.NoMobLag;
 import com.zenya.nomoblag.file.ConfigManager;
 import com.zenya.nomoblag.file.MessagesManager;
+import com.zenya.nomoblag.scheduler.TrackTPSTask;
 import com.zenya.nomoblag.util.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -23,14 +24,14 @@ public class NoMobLagCommand implements CommandExecutor {
 
     private void sendUsage(CommandSender sender) {
         ChatUtils.sendMessage(sender, "&8&m*]----------[*&r &bNoMobLag &8&m*]----------[*&r");
-        ChatUtils.sendMessage(sender, "&b/nochunklag help&f -&9 Shows this help page");
-        ChatUtils.sendMessage(sender, "&b/nochunklag stats&f -&9 Shows server entity statistics &c(work in progress)");
-        ChatUtils.sendMessage(sender, "&b/nochunklag reload&f -&9 Reloads the plugin\'s config and messages");
-        ChatUtils.sendMessage(sender, "&b/nochunklag freeze [chunk/world/all]&f -&9 Removes AI from all specified mobs");
-        ChatUtils.sendMessage(sender, "&b/nochunklag unfreeze [chunk/world/all]&f -&9 Returns AI to all specified mobs");
-        ChatUtils.sendMessage(sender, "&b/nochunklag setcollisions [true/false]&f -&9 Toggles collision physics for all entities");
-        ChatUtils.sendMessage(sender, "&b/nochunklag loadspawners&f -&9 Imposes spawner limits in config to all loaded spawners");
-        ChatUtils.sendMessage(sender, "&8&m*]------------------------------------[*&r");
+        ChatUtils.sendMessage(sender, "&b/nomoblag help&f -&9 Shows this help page");
+        ChatUtils.sendMessage(sender, "&b/nomoblag stats&f -&9 Shows server entity statistics");
+        ChatUtils.sendMessage(sender, "&b/nomoblag reload&f -&9 Reloads the plugin\'s config and messages");
+        ChatUtils.sendMessage(sender, "&b/nomoblag freeze [chunk/world/all]&f -&9 Removes AI from all specified mobs");
+        ChatUtils.sendMessage(sender, "&b/nomoblag unfreeze [chunk/world/all]&f -&9 Returns AI to all specified mobs");
+        ChatUtils.sendMessage(sender, "&b/nomoblag setcollisions [true/false]&f -&9 Toggles collision physics for all entities");
+        ChatUtils.sendMessage(sender, "&b/nomoblag loadspawners&f -&9 Imposes spawner limits in config to all loaded spawners");
+        ChatUtils.sendMessage(sender, "&8&m*]--------------------------------[*&r");
     }
 
 
@@ -52,6 +53,49 @@ public class NoMobLagCommand implements CommandExecutor {
         if(args.length == 1) {
             if(args[0].toLowerCase().equals("help")) {
                 sendUsage(sender);
+                return true;
+            }
+
+            if(args[0].toLowerCase().equals("stats")) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        int totalMobs = 0;
+                        int frozenMobs = 0;
+                        int loadedSpawners = 0;
+                        int loadedChunks = 0;
+                        float tps = TrackTPSTask.getInstance().getAverageTps();
+                        int spawnRate = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-tps." + String.valueOf((int) tps));
+
+                        for(World world : Bukkit.getServer().getWorlds()) {
+                            for(Chunk chunk : world.getLoadedChunks()) {
+                                loadedChunks++;
+                                for(BlockState state : chunk.getTileEntities()) {
+                                    if(state instanceof CreatureSpawner) {
+                                        loadedSpawners++;
+                                    }
+                                }
+                            }
+                            for(Entity ent : world.getEntities()) {
+                                if(ent instanceof LivingEntity) {
+                                    LivingEntity entity = (LivingEntity) ent;
+                                    totalMobs++;
+                                    if(!entity.hasAI()) {
+                                        frozenMobs++;
+                                    }
+                                }
+                            }
+                        }
+
+                        ChatUtils.sendMessage(sender, "&8&m*]----------[*&r &bNoMobLag Statistics &8&m*]----------[*&r");
+                        ChatUtils.sendMessage(sender, "&bTotal Mobs: &9" + String.valueOf(totalMobs) + " (" + String.valueOf((int) (100*frozenMobs/totalMobs)) + "% Frozen)");
+                        ChatUtils.sendMessage(sender, "&bLoaded Spawners: &9" + String.valueOf(loadedSpawners));
+                        ChatUtils.sendMessage(sender, "&bLoaded Chunks: &9" + String.valueOf(loadedChunks));
+                        ChatUtils.sendMessage(sender, "&bServer TPS: &9" + String.valueOf(tps));
+                        ChatUtils.sendMessage(sender, "&bSpawn Rate: &9" + String.valueOf(spawnRate) + "%");
+                        ChatUtils.sendMessage(sender, "&8&m*]----------------------------------------[*&r");
+                    }
+                }.runTask(NoMobLag.getInstance());
                 return true;
             }
 
@@ -273,16 +317,20 @@ public class NoMobLagCommand implements CommandExecutor {
                         int collidable = 0;
                         @Override
                         public void run() {
-                            for (World world : Bukkit.getServer().getWorlds()) {
-                                for (Entity ent : world.getEntities()) {
-                                    if(ent instanceof LivingEntity) {
-                                        LivingEntity entity = (LivingEntity) ent;
-                                        if(!entity.isCollidable()) {
-                                            entity.setCollidable(true);
-                                            collidable++;
+                            try {
+                                for (World world : Bukkit.getServer().getWorlds()) {
+                                    for (Entity ent : world.getEntities()) {
+                                        if(ent instanceof LivingEntity) {
+                                            LivingEntity entity = (LivingEntity) ent;
+                                            if(!entity.isCollidable()) {
+                                                entity.setCollidable(true);
+                                                collidable++;
+                                            }
                                         }
                                     }
                                 }
+                            } catch(NoSuchMethodError exc) {
+                                //Silence 1.8 errors
                             }
                             ChatUtils.sendMessage(sender, "&aEnabled collision physics for &2" + String.valueOf(collidable) + " &aentities");
                         }
@@ -296,16 +344,20 @@ public class NoMobLagCommand implements CommandExecutor {
 
                         @Override
                         public void run() {
-                            for (World world : Bukkit.getServer().getWorlds()) {
-                                for (Entity ent : world.getEntities()) {
-                                    if (ent instanceof LivingEntity) {
-                                        LivingEntity entity = (LivingEntity) ent;
-                                        if(entity.isCollidable()) {
-                                            entity.setCollidable(false);
-                                            collidable++;
+                            try {
+                                for (World world : Bukkit.getServer().getWorlds()) {
+                                    for (Entity ent : world.getEntities()) {
+                                        if (ent instanceof LivingEntity) {
+                                            LivingEntity entity = (LivingEntity) ent;
+                                            if(entity.isCollidable()) {
+                                                entity.setCollidable(false);
+                                                collidable++;
+                                            }
                                         }
                                     }
                                 }
+                            } catch(NoSuchMethodError exc) {
+                                //Silence 1.8 errors
                             }
                             ChatUtils.sendMessage(sender, "&cDisabled collision physics for &4" + String.valueOf(collidable) + " &centities");
                         }

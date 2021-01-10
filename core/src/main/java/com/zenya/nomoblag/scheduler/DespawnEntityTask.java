@@ -22,18 +22,14 @@ public class DespawnEntityTask implements NMLTask {
 
     @Override
     public void runTask() {
+        int rate = ConfigManager.getInstance().getInt("spawners.mob-despawn-rate");
+
         bukkitTask = new BukkitRunnable() {
-            int limit = ConfigManager.getInstance().getInt("spawners.mob-despawn-rate");
-            int count = 0;
             @Override
             public void run() {
-                if(count >= limit) {
-                    entity.remove();
-                    this.cancel();
-                }
-                count++;
+                entity.remove();
             }
-        }.runTaskTimer(NoMobLag.getInstance(), 0, 20);
+        }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 20*rate);
     }
 
     @Override
