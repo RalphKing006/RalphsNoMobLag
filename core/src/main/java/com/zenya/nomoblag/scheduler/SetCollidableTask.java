@@ -21,15 +21,9 @@ public class SetCollidableTask implements NMLTask {
 
     @Override
     public void runTask() {
-        int cancelAfter = 20*10;
-
         bukkitTask = new BukkitRunnable() {
-            int count = 0;
             @Override
             public void run() {
-                count++;
-                if(count >= cancelAfter) this.cancel();
-
                 if(!entity.isCollidable()) {
                     entity.setCollidable(true);
                     new BukkitRunnable() {
@@ -37,10 +31,10 @@ public class SetCollidableTask implements NMLTask {
                         public void run() {
                             entity.setCollidable(false);
                         }
-                    }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 10);
+                    }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 20);
                 }
             }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 1);
+        }.runTaskAsynchronously(NoMobLag.getInstance());
     }
 
     @Override

@@ -102,7 +102,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onProjectileLaunchEvent(ProjectileLaunchEvent e) {
         Projectile proj = e.getEntity();
-        int cancelAfter = 20*10;
+        int cancelAfter = 20*5;
 
         new BukkitRunnable() {
             int count = 0;
@@ -112,7 +112,7 @@ public class Listeners implements Listener {
                 if(count >= cancelAfter) this.cancel();
                 if(proj.isDead() || proj.isOnGround()) this.cancel();
 
-                for(Entity ent : proj.getNearbyEntities(2, 2, 2)) {
+                for(Entity ent : proj.getNearbyEntities(5, 5, 5)) {
                     if(ent instanceof LivingEntity) {
                         try {
                             new SetCollidableTask((LivingEntity) ent);

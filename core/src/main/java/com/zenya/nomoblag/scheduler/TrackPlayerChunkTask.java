@@ -49,23 +49,18 @@ public class TrackPlayerChunkTask implements NMLTask {
                         //Update hashmap
                         chunkCoords.put(player, new int[]{player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ()});
                     }
-                }
-            }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 20*5);
 
-        //Remove old entries in hashmap
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if(chunkCoords.keySet() != null && chunkCoords.keySet().size() != 0) {
-                    for(Player player : chunkCoords.keySet()) {
-                        if(Bukkit.getOnlinePlayers() != null && Bukkit.getOnlinePlayers().size() != 0 && !Bukkit.getOnlinePlayers().contains(player)) {
-                            chunkCoords.remove(player);
+                    //Remove old entries in hashmap
+                    if(chunkCoords.keySet() != null && chunkCoords.keySet().size() != 0) {
+                        for(Player player : chunkCoords.keySet()) {
+                            if(!Bukkit.getOnlinePlayers().contains(player)) {
+                                chunkCoords.remove(player);
+                            }
                         }
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 60*20);
+        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 20*5);
     }
 
     @Override
