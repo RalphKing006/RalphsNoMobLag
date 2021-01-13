@@ -51,3 +51,6 @@
 - Fixed console spam with TrackPlayerChunkTask
 - Fixed more projectiles not doing damage when entity collision is disabled
 
+2.1.5:
+- Fixed console spam with concurrent playerdata modification
+

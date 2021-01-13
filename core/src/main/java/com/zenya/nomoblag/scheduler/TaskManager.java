@@ -8,7 +8,7 @@ public class TaskManager {
 
     public TaskManager() {
         registerTask(TaskKey.TRACK_TPS_TASK, TrackTPSTask.getInstance());
-        registerTask(TaskKey.TRACK_PLAYER_CHUNK_TASK, TrackPlayerChunkTask.getInstance());
+        registerTask(TaskKey.TRACK_PLAYER_TASK, TrackPlayerTask.getInstance());
     }
 
     public NMLTask getTask(TaskKey key) {
