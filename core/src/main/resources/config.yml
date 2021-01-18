@@ -1,17 +1,19 @@
 # For internal reference only, do not change the config version
-config-version: 4
+config-version: 5
 
 # Settings related to global mob spawning on the server
 mob-spawning:
   # Chance to spawn mobs (percentage) at a specific TPS
+  # Do NOT remove specific TPS values or the plugin will break
+  # To disable this feature, simply set all values to "100"
   spawn-chance-at-tps:
     20: 100
-    19: 75
-    18: 50
-    17: 35
-    16: 25
-    15: 15
-    14: 10
+    19: 80
+    18: 65
+    17: 50
+    16: 35
+    15: 25
+    14: 15
     13: 5
     12: 3
     11: 1
@@ -26,7 +28,20 @@ mob-spawning:
     2: 0
     1: 0
     0: 0
-  # Mobs spawned from these SpawnReasons will be blocked based on "spawn-chance-at-tps"
+  # Chance to spawn mobs (percentage) above a specified playercount. The final spawn chance is this percentage multiplied with "spawn-chance-at-tps"
+  # For example, with the default config if the TPS is 18 (50%) and the playercount is 70 players (80%), the final mob spawn chance will be (50*80)/100 = 40%
+  # You can add more specific playercount values and the one nearest to the current playercount will be used
+  # To disable this feature, simply set all values to "100"
+  spawn-chance-at-playercount:
+    # 50 players and below
+    50: 100
+    # 51 to 70 players
+    51: 90
+    # 71 to 100 players
+    71: 80
+    # 101 players and above
+    101: 75
+  # Mobs spawned from these SpawnReasons will be blocked based on "spawn-chance-at-tps" and "spawn-chance-at-playercount"
   # A full list of SpawnReasons can be found at https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
   # It is recommended to use this default list as these spawn reasons are usually the performance-heavy ones
   spawnreason-tps-block:

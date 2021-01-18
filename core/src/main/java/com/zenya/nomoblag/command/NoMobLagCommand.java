@@ -65,7 +65,23 @@ public class NoMobLagCommand implements CommandExecutor {
                         int loadedSpawners = 0;
                         int loadedChunks = 0;
                         float tps = TrackTPSTask.getInstance().getAverageTps();
-                        int spawnRate = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-tps." + String.valueOf((int) tps));
+                        int playercount = Bukkit.getOnlinePlayers().size();
+                        int tpsSpawnChance = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-tps." + String.valueOf((int) tps));
+                        int playerSpawnChance = 100;
+                        ArrayList<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
+                        if(keyList != null && keyList.size() != 0) {
+                            int smallestDiff = Math.abs(Integer.valueOf(keyList.get(0)) - playercount);
+                            int smallestIndex = 0;
+                            for (int i = 1; i < keyList.size(); i++) {
+                                int difference = Math.abs(Integer.valueOf(keyList.get(i)) - playercount);
+                                if (difference < smallestDiff) {
+                                    smallestDiff = difference;
+                                    smallestIndex = i;
+                                }
+                            }
+                            playerSpawnChance = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-playercount." + String.valueOf(keyList.get(smallestIndex)));
+                        }
+                        float finalSpawnChance = tpsSpawnChance * playerSpawnChance / 100.0f;
 
                         for(World world : Bukkit.getServer().getWorlds()) {
                             for(Chunk chunk : world.getLoadedChunks()) {
@@ -92,8 +108,9 @@ public class NoMobLagCommand implements CommandExecutor {
                         ChatUtils.sendMessage(sender, "&bLoaded Spawners: &9" + String.valueOf(loadedSpawners));
                         ChatUtils.sendMessage(sender, "&bLoaded Chunks: &9" + String.valueOf(loadedChunks));
                         ChatUtils.sendMessage(sender, "&bServer TPS: &9" + String.valueOf(tps));
-                        ChatUtils.sendMessage(sender, "&bSpawn Rate: &9" + String.valueOf(spawnRate) + "%");
-                        ChatUtils.sendMessage(sender, "&8&m*]----------------------------------------[*&r");
+                        ChatUtils.sendMessage(sender, "&bPlayercount: &9" + String.valueOf(playercount));
+                        ChatUtils.sendMessage(sender, "&bSpawn Rate: &9" + String.valueOf(finalSpawnChance) + "%");
+                        ChatUtils.sendMessage(sender, "&8&m*]-----------------------------------------[*&r");
                     }
                 }.runTask(NoMobLag.getInstance());
                 return true;

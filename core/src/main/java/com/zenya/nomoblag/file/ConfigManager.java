@@ -9,12 +9,10 @@ import org.bukkit.util.FileUtil;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class ConfigManager {
-    private int configVersion = 4; //Change this when updating config
-    private boolean resetConfig = false; //Change this if config should reset when updating
+    private int configVersion = 5; //Change this when updating config
+    private boolean resetConfig = true; //Change this if config should reset when updating
 
     private static ConfigManager configManager;
     private Plugin plugin = NoMobLag.getInstance();

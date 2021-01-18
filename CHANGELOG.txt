@@ -54,3 +54,9 @@
 2.1.5:
 - Fixed console spam with concurrent playerdata modification
 
+2.1.6:
+- Added a feature to reduce spawn rates based on playercount
+- Added more items to /nomoblag stats
+- Fixed console spam with some mob spawning causes not existing on older versions of Spigot
+- Changed some default config values for "mob-spawning.spawn-chance-at-tps"
+

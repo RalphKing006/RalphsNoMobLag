@@ -188,6 +188,7 @@ public class Listeners implements Listener {
     public void handleSpawnChance(CreatureSpawnEvent e) {
         Random randObj = new Random();
         int tps = Math.round(TrackTPSTask.getInstance().getAverageTps());
+        int playercount = Bukkit.getOnlinePlayers().size();
 
         if(e.isCancelled()) return;
 
@@ -205,9 +206,28 @@ public class Listeners implements Listener {
         //Enforce TPS spawn chance
         int randNum = randObj.nextInt(100) + 1;
         int spawnChance = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-tps." + String.valueOf(tps));
-
         if(randNum > spawnChance) {
             e.setCancelled(true);
+        }
+
+        //Enforce playercount spawn chance
+        ArrayList<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
+        if(keyList != null && keyList.size() != 0) {
+            int smallestDiff = Math.abs(Integer.valueOf(keyList.get(0)) - playercount);
+            int smallestIndex = 0;
+            for(int i=1; i<keyList.size(); i++) {
+                int difference = Math.abs(Integer.valueOf(keyList.get(i)) - playercount);
+                if(difference < smallestDiff) {
+                    smallestDiff = difference;
+                    smallestIndex = i;
+                }
+            }
+
+            randNum = randObj.nextInt(100) + 1;
+            spawnChance = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-playercount." + String.valueOf(keyList.get(smallestIndex)));
+            if(randNum > spawnChance) {
+                e.setCancelled(true);
+            }
         }
     }
 
@@ -229,10 +249,15 @@ public class Listeners implements Listener {
 
         //Enforce anti-raiding
         if(ConfigManager.getInstance().getBool("spawn-treshold.disable-raiding")) {
-            if(e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.RAID)) {
-                e.setCancelled(true);
-                return;
+            try {
+                //Post-1.14 only
+                if(e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.RAID)) {
+                    e.setCancelled(true);
+                }
+            } catch(NoSuchFieldError exc) {
+                //Silence errors
             }
+            return;
         }
 
         //Enforce anti-spawner farm
