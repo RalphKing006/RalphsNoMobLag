@@ -62,5 +62,5 @@
 
 2.1.7:
 - Added a config option to disable spawner limitations
-- Implemented an auto config updater
+- Implemented an automatic config updater
 
