@@ -54,6 +54,7 @@ public class Listeners implements Listener {
     //Enforce minimum spawner distance
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlaceEvent(BlockPlaceEvent e) {
+        if(!ConfigManager.getInstance().getBool("spawners.enabled")) return;
         if(e.isCancelled()) return;
 
         if(e.getBlockPlaced().getType().equals(XMaterial.SPAWNER.parseMaterial())) {
@@ -339,6 +340,7 @@ public class Listeners implements Listener {
     }
 
     public void handleSpawners(CreatureSpawnEvent e) {
+        if(!ConfigManager.getInstance().getBool("spawners.enabled")) return;
         if(e.isCancelled()) return;
         if(!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) return;
 

@@ -60,3 +60,7 @@
 - Fixed console spam with some mob spawning causes not existing on older versions of Spigot
 - Changed some default config values for "mob-spawning.spawn-chance-at-tps"
 
+2.1.7:
+- Added a config option to disable spawner limitations
+- Implemented an auto config updater
+

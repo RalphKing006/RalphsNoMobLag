@@ -7,12 +7,26 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigManager {
-    private int configVersion = 5; //Change this when updating config
-    private boolean resetConfig = true; //Change this if config should reset when updating
+    //Change this when updating config
+    private int configVersion = 6;
+    //Change this if config should reset when updating
+    private boolean resetConfig = false;
+    //These nodes will use the latest resource config's values
+    private List<String> ignoredNodes = new ArrayList<String>(){{
+            add("config-version");
+    }};
+    //These nodes will be emptied and replaced with old values instead of being appended
+    //Applicable to keys and lists
+    private List<String> replaceNodes = new ArrayList<String>(){{
+        add("mob-spawning.spawn-chance-at-playercount");
+        add("mob-spawning.spawnreason-tps-block");
+    }};
 
     private static ConfigManager configManager;
     private Plugin plugin = NoMobLag.getInstance();
@@ -20,7 +34,7 @@ public class ConfigManager {
     private File configFile;
     private FileConfiguration config;
 
-    public ConfigManager() {
+    public ConfigManager() throws IOException {
         configFile = new File(plugin.getDataFolder(), "config.yml");
         config = YamlConfiguration.loadConfiguration(configFile);
 
@@ -29,23 +43,35 @@ public class ConfigManager {
             return;
         }
 
+        //Reset config for backward-compatibility
+        if(getConfigVersion() > configVersion) resetConfig = true;
+
         if(getConfigVersion() != configVersion) {
-            File configFile = new File(plugin.getDataFolder(), "config.yml");
             File oldConfigFile = new File(plugin.getDataFolder(), "config.yml.v" + String.valueOf(getConfigVersion()));
             FileUtil.copy(configFile, oldConfigFile);
+            FileConfiguration oldConfig = YamlConfiguration.loadConfiguration(oldConfigFile);
 
+            //Refresh file
+            configFile.delete();
+            plugin.saveDefaultConfig();
+            configFile = new File(plugin.getDataFolder(), "config.yml");
+            config = YamlConfiguration.loadConfiguration(configFile);
+
+            //Add old values
             if(!resetConfig) {
-                config.setDefaults(origConfig);
-                config.options().copyDefaults(true);
-                config.set("config-version", configVersion);
-                plugin.saveConfig();
-            } else {
-                configFile.delete();
-                plugin.saveDefaultConfig();
+                for(String node : oldConfig.getKeys(true)) {
+                    if(ignoredNodes.contains(node)) continue;
+                    if(replaceNodes.contains(node)) {
+                        config.set(node, null);
+                    }
+                    if(oldConfig.getConfigurationSection(node) != null && oldConfig.getConfigurationSection(node).getKeys(false) != null && oldConfig.getConfigurationSection(node).getKeys(false).size() != 0) continue;
+                    config.set(node, oldConfig.get(node));
+                }
             }
 
+            //Save regardless
+            config.save(configFile);
         }
-
     }
 
     private boolean getConfigExists() {
@@ -131,7 +157,11 @@ public class ConfigManager {
 
     public static ConfigManager getInstance() {
         if(configManager == null) {
-            configManager = new ConfigManager();
+            try {
+                configManager = new ConfigManager();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return configManager;
     }

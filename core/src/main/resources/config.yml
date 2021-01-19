@@ -1,5 +1,6 @@
+# Config wiki and help can be found at https://gitlab.com/Zenya4/no-mob-lag/-/blob/master/core/src/main/resources/config.yml
 # For internal reference only, do not change the config version
-config-version: 5
+config-version: 6
 
 # Settings related to global mob spawning on the server
 mob-spawning:
@@ -82,6 +83,9 @@ spawn-treshold:
 
 # Settings relating to mob spawners
 spawners:
+  # Whether or not to enable the spawner limitations
+  # Set to "false" for vanilla spawner behaviour
+  enabled: true
   # Minimum distance between mob spawners
   # This setting only apply to newly-placed spawners after NoMobLag is installed
   # Setting this to a large value may cause lag when spawners are placed as the plugin has to scan a large area for existing spawners

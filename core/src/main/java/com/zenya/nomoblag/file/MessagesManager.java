@@ -9,10 +9,22 @@ import org.bukkit.util.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessagesManager {
-    private int messagesVersion = 1; //Change this when updating messages
-    private boolean resetMessages = false; //Change this if messages should reset when updating
+    //Change this when updating messages
+    private int messagesVersion = 1;
+    //Change this if messages should reset when updating
+    private boolean resetMessages = false;
+    //These nodes will use the latest resource config's values
+    private List<String> ignoredNodes = new ArrayList<String>(){{
+        add("messages-version");
+    }};
+    //These nodes will be emptied and replaced with old values instead of being appended
+    //Applicable to nested keys
+    private List<String> replaceNodes = new ArrayList<String>(){{
+    }};
 
     private static MessagesManager messagesManager;
     private Plugin plugin = NoMobLag.getInstance();
@@ -29,22 +41,36 @@ public class MessagesManager {
             return;
         }
 
+        //Reset messages for backward-compatibility
+        if(getMessagesVersion() > messagesVersion) resetMessages = true;
+
         if(getMessagesVersion() != messagesVersion) {
             File oldMessagesFile = new File(plugin.getDataFolder(), "messages.yml.v" + String.valueOf(getMessagesVersion()));
             FileUtil.copy(messagesFile, oldMessagesFile);
+            FileConfiguration oldMessages = YamlConfiguration.loadConfiguration(oldMessagesFile);
 
+            //Refresh file
+            messagesFile.delete();
+            origMessages.save(messagesFile);
+            messagesFile = new File(plugin.getDataFolder(), "messages.yml");
+            messages = YamlConfiguration.loadConfiguration(messagesFile);
+
+            //Add old values
             if(!resetMessages) {
-                messages.setDefaults(origMessages);
-                messages.options().copyDefaults(true);
-                messages.set("messages-version", messagesVersion);
-                messages.save(messagesFile);
-            } else {
-                messagesFile.delete();
-                origMessages.save(messagesFile);
+                for(String node : oldMessages.getKeys(true)) {
+                    if(ignoredNodes.contains(node)) continue;
+                    if(oldMessages.getKeys(true).contains(node + ".")) continue;
+                    if(replaceNodes.contains(node)) {
+                        messages.set(node, null);
+                        messages.createSection(node);
+                    }
+                    messages.set(node, oldMessages.get(node));
+                }
             }
 
+            //Save regardless
+            messages.save(messagesFile);
         }
-
     }
 
     private boolean getMessagesExists() {

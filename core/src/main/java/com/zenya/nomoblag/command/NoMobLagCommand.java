@@ -110,7 +110,7 @@ public class NoMobLagCommand implements CommandExecutor {
                         ChatUtils.sendMessage(sender, "&bServer TPS: &9" + String.valueOf(tps));
                         ChatUtils.sendMessage(sender, "&bPlayercount: &9" + String.valueOf(playercount));
                         ChatUtils.sendMessage(sender, "&bSpawn Rate: &9" + String.valueOf(finalSpawnChance) + "%");
-                        ChatUtils.sendMessage(sender, "&8&m*]-----------------------------------------[*&r");
+                        ChatUtils.sendMessage(sender, "&8&m*]----------------------------------------[*&r");
                     }
                 }.runTask(NoMobLag.getInstance());
                 return true;
