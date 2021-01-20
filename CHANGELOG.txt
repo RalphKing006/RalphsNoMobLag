@@ -64,3 +64,6 @@
 - Added a config option to disable spawner limitations
 - Implemented an automatic config updater
 
+2.1.8:
+- Fixed an issue with config not initialising on first plugin load
+

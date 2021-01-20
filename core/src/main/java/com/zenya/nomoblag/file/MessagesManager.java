@@ -34,12 +34,10 @@ public class MessagesManager {
 
     public MessagesManager() throws IOException {
         messagesFile = new File(plugin.getDataFolder(), "messages.yml");
-        messages = YamlConfiguration.loadConfiguration(messagesFile);
-
         if(!getMessagesExists()) {
             origMessages.save(messagesFile);
-            return;
         }
+        messages = YamlConfiguration.loadConfiguration(messagesFile);
 
         //Reset messages for backward-compatibility
         if(getMessagesVersion() > messagesVersion) resetMessages = true;

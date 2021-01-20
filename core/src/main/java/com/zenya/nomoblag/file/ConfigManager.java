@@ -36,12 +36,10 @@ public class ConfigManager {
 
     public ConfigManager() throws IOException {
         configFile = new File(plugin.getDataFolder(), "config.yml");
-        config = YamlConfiguration.loadConfiguration(configFile);
-
         if(!getConfigExists()) {
             plugin.saveDefaultConfig();
-            return;
         }
+        config = YamlConfiguration.loadConfiguration(configFile);
 
         //Reset config for backward-compatibility
         if(getConfigVersion() > configVersion) resetConfig = true;
