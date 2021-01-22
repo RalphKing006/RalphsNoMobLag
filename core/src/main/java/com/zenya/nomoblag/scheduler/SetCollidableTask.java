@@ -1,15 +1,15 @@
 package com.zenya.nomoblag.scheduler;
 
 import com.zenya.nomoblag.NoMobLag;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Creature;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class SetCollidableTask implements NMLTask {
     private BukkitTask bukkitTask;
-    private LivingEntity entity;
+    private Creature entity;
 
-    public SetCollidableTask(LivingEntity entity) {
+    public SetCollidableTask(Creature entity) {
         this.entity = entity;
         runTask();
     }

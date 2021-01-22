@@ -34,6 +34,8 @@ import java.util.Random;
 public class Listeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreatureSpawnEvent(CreatureSpawnEvent e) {
+        if(!(e.getEntity() instanceof Creature)) return;
+
         handleSpawnChance(e);
         handleSpawnTreshold(e);
         handleSpawners(e);
@@ -43,7 +45,7 @@ public class Listeners implements Listener {
 
     //Enforce anti-enderman end farm
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onEntityTargetLivingEntityEvent(EntityTargetLivingEntityEvent e) {
+    public void onEntityTargetCreatureEvent(EntityTargetLivingEntityEvent e) {
         if(!MetaUtils.hasMeta(e.getEntity(), "no-endermite-aggro")) return;
         if(e.getTarget().getType().equals(EntityType.valueOf("ENDERMITE"))) {
             e.setTarget(null);
@@ -75,9 +77,9 @@ public class Listeners implements Listener {
         if(!ConfigManager.getInstance().getBool("mob-freezing.enable-freezing")) return;
         if(!ConfigManager.getInstance().getBool("mob-freezing.enable-ai-on-interact")) return;
         if(e.isCancelled()) return;
-        if(!(e.getRightClicked() instanceof LivingEntity)) return;
+        if(!(e.getRightClicked() instanceof Creature)) return;
 
-        LivingEntity entity = (LivingEntity) e.getRightClicked();
+        Creature entity = (Creature) e.getRightClicked();
         ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
         if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
             new FreezeEntityTask(entity);
@@ -90,9 +92,9 @@ public class Listeners implements Listener {
         if(!ConfigManager.getInstance().getBool("mob-freezing.enable-freezing")) return;
         if(!ConfigManager.getInstance().getBool("mob-freezing.enable-ai-on-interact")) return;
         if(e.isCancelled()) return;
-        if(!(e.getEntity() instanceof LivingEntity)) return;
+        if(!(e.getEntity() instanceof Creature)) return;
 
-        LivingEntity entity = (LivingEntity) e.getEntity();
+        Creature entity = (Creature) e.getEntity();
         ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
         if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
             new FreezeEntityTask(entity);
@@ -114,9 +116,9 @@ public class Listeners implements Listener {
                 if(proj.isDead() || proj.isOnGround()) this.cancel();
 
                 for(Entity ent : proj.getNearbyEntities(5, 5, 5)) {
-                    if(ent instanceof LivingEntity) {
+                    if(ent instanceof Creature) {
                         try {
-                            new SetCollidableTask((LivingEntity) ent);
+                            new SetCollidableTask((Creature) ent);
                         } catch(NoSuchMethodError exc) {
                             //Silence 1.8 errors
                         }
@@ -130,11 +132,11 @@ public class Listeners implements Listener {
     //Enforce (lack of) mob collision on chunk load
     @EventHandler
     public void onPlayerChunkChangeEvent(PlayerChunkChangeEvent e) {
-        ArrayList<LivingEntity> mobs = new ArrayList<>();
+        ArrayList<Creature> mobs = new ArrayList<>();
         for(Chunk chunk : e.getNearbyChunks(1)) {
             for(Entity ent: chunk.getEntities()) {
-                if(ent instanceof LivingEntity) {
-                    mobs.add((LivingEntity) ent);
+                if(ent instanceof Creature) {
+                    mobs.add((Creature) ent);
                 }
             }
         }
@@ -144,7 +146,7 @@ public class Listeners implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for(LivingEntity mob : mobs) {
+                for(Creature mob : mobs) {
                     ArrayList<String> collidableMobs = ConfigManager.getInstance().getList("mob-collisions.force-collision-mobs");
                     if((collidableMobs == null) || (collidableMobs.size() == 0) || !(collidableMobs.contains(mob.getType().name()))) {
                         try {
@@ -162,7 +164,7 @@ public class Listeners implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    for(LivingEntity mob : mobs) {
+                    for(Creature mob : mobs) {
                         mob.setAI(true);
                     }
                 }
@@ -175,7 +177,7 @@ public class Listeners implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    for(LivingEntity mob : mobs) {
+                    for(Creature mob : mobs) {
                         ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
                         if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(mob.getType().name()))) {
                             new FreezeEntityTask(mob);
@@ -364,7 +366,7 @@ public class Listeners implements Listener {
 
         //Handle mob despawning
         if(ConfigManager.getInstance().getInt("spawners.mob-despawn-rate") < 0) return;
-        LivingEntity entity = e.getEntity();
+        Creature entity = (Creature) e.getEntity();
         new DespawnEntityTask(entity);
     }
 
@@ -372,7 +374,7 @@ public class Listeners implements Listener {
         if(e.isCancelled()) return;
         if(!ConfigManager.getInstance().getBool("mob-collisions.disable-mob-collision")) return;
 
-        LivingEntity entity = e.getEntity();
+        Creature entity = (Creature) e.getEntity();
         ArrayList<String> collidableMobs = ConfigManager.getInstance().getList("mob-collisions.force-collision-mobs");
         if((collidableMobs == null) || (collidableMobs.size() == 0) || !(collidableMobs.contains(entity.getType().name()))) {
             try {
@@ -388,7 +390,7 @@ public class Listeners implements Listener {
         if(!ConfigManager.getInstance().getBool("mob-freezing.enable-freezing")) return;
         if(ConfigManager.getInstance().getInt("mob-freezing.disable-ai-after") < 0) return;
 
-        LivingEntity entity = e.getEntity();
+        Creature entity = (Creature) e.getEntity();
         ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
         if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
             new FreezeEntityTask(entity);

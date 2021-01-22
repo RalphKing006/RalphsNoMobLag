@@ -67,3 +67,6 @@
 2.1.8:
 - Fixed an issue with config not initialising on first plugin load
 
+2.1.9:
+- Fixed a bug where entities in "mob-collisions.force-collision-mobs" were still not collidable
+
