@@ -12,7 +12,6 @@
     </parent>
 
     <dependencies>
-
         <!-- Plugin core -->
         <dependency>
             <groupId>com.zenya.nomoblag</groupId>

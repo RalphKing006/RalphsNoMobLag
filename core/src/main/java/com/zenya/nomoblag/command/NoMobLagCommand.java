@@ -18,7 +18,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class NoMobLagCommand implements CommandExecutor {
 
@@ -68,7 +68,7 @@ public class NoMobLagCommand implements CommandExecutor {
                         int playercount = Bukkit.getOnlinePlayers().size();
                         int tpsSpawnChance = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-tps." + String.valueOf((int) tps));
                         int playerSpawnChance = 100;
-                        ArrayList<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
+                        List<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
                         if(keyList != null && keyList.size() != 0) {
                             int smallestDiff = Math.abs(Integer.valueOf(keyList.get(0)) - playercount);
                             int smallestIndex = 0;
@@ -175,8 +175,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             for (Entity ent : player.getLocation().getChunk().getEntities()) {
                                 if (ent instanceof LivingEntity) {
                                     LivingEntity entity = (LivingEntity) ent;
-                                    ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-                                    if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
+                                    if(!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
                                         if(entity.hasAI()) {
                                             entity.setAI(false);
                                             frozen++;
@@ -204,8 +203,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             for (Entity ent : player.getWorld().getEntities()) {
                                 if (ent instanceof LivingEntity) {
                                     LivingEntity entity = (LivingEntity) ent;
-                                    ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-                                    if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
+                                    if(!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
                                         if(entity.hasAI()) {
                                             entity.setAI(false);
                                             frozen++;
@@ -229,8 +227,7 @@ public class NoMobLagCommand implements CommandExecutor {
                                 for (Entity ent : world.getEntities()) {
                                     if (ent instanceof LivingEntity) {
                                         LivingEntity entity = (LivingEntity) ent;
-                                        ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-                                        if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
+                                        if(!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
                                             if(entity.hasAI()) {
                                                 entity.setAI(false);
                                                 frozen++;
@@ -261,9 +258,13 @@ public class NoMobLagCommand implements CommandExecutor {
                         int unfrozen = 0;
                         @Override
                         public void run() {
+                            mobloop:
                             for (Entity ent : player.getLocation().getChunk().getEntities()) {
                                 if(ent instanceof LivingEntity) {
                                     LivingEntity entity = (LivingEntity) ent;
+                                    for(String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
+                                        if(entity.hasMetadata(nbt)) continue mobloop;
+                                    }
                                     if(!entity.hasAI()) {
                                         entity.setAI(true);
                                         unfrozen++;
@@ -286,9 +287,13 @@ public class NoMobLagCommand implements CommandExecutor {
                         int unfrozen = 0;
                         @Override
                         public void run() {
+                            mobloop:
                             for (Entity ent : player.getWorld().getEntities()) {
                                 if(ent instanceof LivingEntity) {
                                     LivingEntity entity = (LivingEntity) ent;
+                                    for(String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
+                                        if(entity.hasMetadata(nbt)) continue mobloop;
+                                    }
                                     if(!entity.hasAI()) {
                                         entity.setAI(true);
                                         unfrozen++;
@@ -307,9 +312,13 @@ public class NoMobLagCommand implements CommandExecutor {
                         @Override
                         public void run() {
                             for (World world : Bukkit.getServer().getWorlds()) {
+                                mobloop:
                                 for (Entity ent : world.getEntities()) {
                                     if(ent instanceof LivingEntity) {
                                         LivingEntity entity = (LivingEntity) ent;
+                                        for(String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
+                                            if(entity.hasMetadata(nbt)) continue mobloop;
+                                        }
                                         if(!entity.hasAI()) {
                                             entity.setAI(true);
                                             unfrozen++;

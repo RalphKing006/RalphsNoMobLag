@@ -70,3 +70,8 @@
 2.1.9:
 - Fixed a bug where entities in "mob-collisions.force-collision-mobs" were still not collidable
 
+2.2.0:
+- Mobs with certain metadata will no longer unfreeze (compatibility with villager shop plugins)
+- Minor config update
+- Internal code cleanup
+

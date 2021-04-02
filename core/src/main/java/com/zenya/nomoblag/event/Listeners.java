@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Listeners implements Listener {
@@ -80,8 +81,10 @@ public class Listeners implements Listener {
         if(!(e.getRightClicked() instanceof Creature)) return;
 
         Creature entity = (Creature) e.getRightClicked();
-        ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-        if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
+        for(String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
+            if(entity.hasMetadata(nbt)) return;
+        }
+        if(!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
             new FreezeEntityTask(entity);
         }
     }
@@ -95,8 +98,10 @@ public class Listeners implements Listener {
         if(!(e.getEntity() instanceof Creature)) return;
 
         Creature entity = (Creature) e.getEntity();
-        ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-        if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
+        for(String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
+            if(entity.hasMetadata(nbt)) return;
+        }
+        if(!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
             new FreezeEntityTask(entity);
         }
     }
@@ -132,7 +137,7 @@ public class Listeners implements Listener {
     //Enforce (lack of) mob collision on chunk load
     @EventHandler
     public void onPlayerChunkChangeEvent(PlayerChunkChangeEvent e) {
-        ArrayList<Creature> mobs = new ArrayList<>();
+        List<Creature> mobs = new ArrayList<>();
         for(Chunk chunk : e.getNearbyChunks(1)) {
             for(Entity ent: chunk.getEntities()) {
                 if(ent instanceof Creature) {
@@ -147,8 +152,7 @@ public class Listeners implements Listener {
             @Override
             public void run() {
                 for(Creature mob : mobs) {
-                    ArrayList<String> collidableMobs = ConfigManager.getInstance().getList("mob-collisions.force-collision-mobs");
-                    if((collidableMobs == null) || (collidableMobs.size() == 0) || !(collidableMobs.contains(mob.getType().name()))) {
+                    if(ConfigManager.getInstance().listContains("mob-collisions.force-collision-mobs", mob.getType().name())) {
                         try {
                             mob.setCollidable(!ConfigManager.getInstance().getBool("mob-collisions.disable-mob-collision"));
                         } catch(NoSuchMethodError exc) {
@@ -177,9 +181,12 @@ public class Listeners implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    mobloop:
                     for(Creature mob : mobs) {
-                        ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-                        if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(mob.getType().name()))) {
+                        for(String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
+                            if(mob.hasMetadata(nbt)) continue mobloop;
+                        }
+                        if(!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", mob.getType().name())) {
                             new FreezeEntityTask(mob);
                         }
                     }
@@ -214,7 +221,7 @@ public class Listeners implements Listener {
         }
 
         //Enforce playercount spawn chance
-        ArrayList<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
+        List<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
         if(keyList != null && keyList.size() != 0) {
             int smallestDiff = Math.abs(Integer.valueOf(keyList.get(0)) - playercount);
             int smallestIndex = 0;
@@ -375,8 +382,7 @@ public class Listeners implements Listener {
         if(!ConfigManager.getInstance().getBool("mob-collisions.disable-mob-collision")) return;
 
         Creature entity = (Creature) e.getEntity();
-        ArrayList<String> collidableMobs = ConfigManager.getInstance().getList("mob-collisions.force-collision-mobs");
-        if((collidableMobs == null) || (collidableMobs.size() == 0) || !(collidableMobs.contains(entity.getType().name()))) {
+        if(ConfigManager.getInstance().listContains("mob-collisions.force-collision-mobs", entity.getType().name())) {
             try {
                 entity.setCollidable(false);
             } catch(NoSuchMethodError exc) {
@@ -391,8 +397,10 @@ public class Listeners implements Listener {
         if(ConfigManager.getInstance().getInt("mob-freezing.disable-ai-after") < 0) return;
 
         Creature entity = (Creature) e.getEntity();
-        ArrayList<String> freezeBypassMobs = ConfigManager.getInstance().getList("mob-freezing.freeze-bypass-mobs");
-        if((freezeBypassMobs == null) || (freezeBypassMobs.size() == 0) || !(freezeBypassMobs.contains(entity.getType().name()))) {
+        for(String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
+            if(entity.hasMetadata(nbt)) return;
+        }
+        if(!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
             new FreezeEntityTask(entity);
         }
     }
