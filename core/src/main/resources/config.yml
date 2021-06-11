@@ -91,8 +91,10 @@ spawners:
   # Setting this to a large value may cause lag when spawners are placed as the plugin has to scan a large area for existing spawners
   minimum-spawner-distance: 6
   # Maximum distance a player can be away from the spawner for it to be activated
+  # Only available for Spigot 1.13 and above
   activation-range: 8
   # Maximum number of mobs a spawner can spawn every minute
+  # Only available for Spigot 1.13 and above
   max-mobs-per-minute: 10
   # Time in seconds before mobs spawned from mob spawners despawn
   # Set this as -1 to disable automatic despawning

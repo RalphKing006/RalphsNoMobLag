@@ -75,3 +75,6 @@
 - Minor config update
 - Internal code cleanup
 
+2.2.1:
+- Fixed some console spam on servers running Spigot 1.12.2 and below
+

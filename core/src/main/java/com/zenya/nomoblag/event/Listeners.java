@@ -359,15 +359,21 @@ public class Listeners implements Listener {
             public void run() {
                 CreatureSpawner spawner = SpawnerUtils.getNearestSpawner(e.getLocation(), 4);
                 if(spawner == null) return;
+                try {
+                    //Post-1.12 only
+                    //Handle spawner activation range
+                    spawner.setSpawnRange(4);
+                    spawner.setRequiredPlayerRange(ConfigManager.getInstance().getInt("spawners.activation-range"));
 
-                //Handle spawner activation range
-                spawner.setSpawnRange(4);
-                spawner.setRequiredPlayerRange(ConfigManager.getInstance().getInt("spawners.activation-range"));
+                    //Handle max mobs per minute
+                    spawner.setSpawnCount(1);
+                    spawner.setMinSpawnDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
+                    spawner.setMaxSpawnDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
 
-                //Handle max mobs per minute
-                spawner.setSpawnCount(1);
-                spawner.setMinSpawnDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
-                spawner.setMaxSpawnDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
+                } catch(NoSuchMethodError exc) {
+                    //Silence errors
+                    spawner.setDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
+                }
             }
         }.runTask(NoMobLag.getInstance());
 
