@@ -78,3 +78,6 @@
 2.2.1:
 - Fixed some console spam on servers running Spigot 1.12.2 and below
 
+2.3.0:
+- Added 1.17 support
+
