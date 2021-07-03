@@ -20,6 +20,7 @@ public class DespawnEntityTask implements NMLTask {
         return TaskKey.DESPAWN_ENTITY_TASK;
     }
 
+    //Task cannot be async since 1.17
     @Override
     public void runTask() {
         int rate = ConfigManager.getInstance().getInt("spawners.mob-despawn-rate");
@@ -29,7 +30,7 @@ public class DespawnEntityTask implements NMLTask {
             public void run() {
                 entity.remove();
             }
-        }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 20*rate);
+        }.runTaskLater(NoMobLag.getInstance(), 20*rate);
     }
 
     @Override

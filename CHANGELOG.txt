@@ -81,3 +81,6 @@
 2.3.0:
 - Added 1.17 support
 
+2.3.1:
+- Fixed spawner mobs not being properly removed on 1.17
+
