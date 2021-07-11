@@ -31,7 +31,7 @@ public class SetCollidableTask implements NMLTask {
                         public void run() {
                             entity.setCollidable(false);
                         }
-                    }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 20);
+                    }.runTaskLater(NoMobLag.getInstance(), 20);
                 }
             }
         }.runTaskAsynchronously(NoMobLag.getInstance());

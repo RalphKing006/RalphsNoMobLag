@@ -84,3 +84,7 @@
 2.3.1:
 - Fixed spawner mobs not being properly removed on 1.17
 
+2.3.2:
+- Fixed some async errors with "/nml (un)freeze"
+- Fixed mobs defined in `mob-freezing.freeze-bypass-mobs` still being frozen
+

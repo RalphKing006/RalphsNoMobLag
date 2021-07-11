@@ -191,7 +191,7 @@ public class Listeners implements Listener {
                         }
                     }
                 }
-            }.runTaskAsynchronously(NoMobLag.getInstance());
+            }.runTask(NoMobLag.getInstance());
         }
     }
 

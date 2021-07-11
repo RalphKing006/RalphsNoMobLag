@@ -185,7 +185,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&4" + String.valueOf(frozen) + " &cmobs have been frozen");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
 
@@ -213,7 +213,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&4" + String.valueOf(frozen) + " &cmobs have been frozen");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
 
@@ -238,7 +238,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&4" + String.valueOf(frozen) + " &cmobs have been frozen");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
                 //Wrong arg2 for freeze
@@ -273,7 +273,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&2" + String.valueOf(unfrozen) + " &amobs have been unfrozen");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
 
@@ -302,7 +302,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&2" + String.valueOf(unfrozen) + " &amobs have been unfrozen");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
 
@@ -328,7 +328,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&2" + String.valueOf(unfrozen) + " &amobs have been unfrozen");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
                 //Wrong arg2 for unfreeze
@@ -360,7 +360,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&aEnabled collision physics for &2" + String.valueOf(collidable) + " &aentities");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
 
@@ -387,7 +387,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&cDisabled collision physics for &4" + String.valueOf(collidable) + " &centities");
                         }
-                    }.runTaskAsynchronously(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.getInstance());
                     return true;
                 }
 
