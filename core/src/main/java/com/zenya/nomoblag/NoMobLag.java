@@ -1,6 +1,7 @@
 package com.zenya.nomoblag;
 
 import com.zenya.nomoblag.command.NoMobLagCommand;
+import com.zenya.nomoblag.command.NoMobLagTab;
 import com.zenya.nomoblag.event.Listeners;
 import com.zenya.nomoblag.file.ConfigManager;
 import com.zenya.nomoblag.file.MessagesManager;
@@ -25,6 +26,11 @@ public class NoMobLag extends JavaPlugin {
 
         //Register commands
         this.getCommand("nomoblag").setExecutor(new NoMobLagCommand());
+        try {
+            this.getCommand("nomoblag").setTabCompleter(new NoMobLagTab());
+        } catch(Exception exc) {
+            //Do nothing, version doesn't support tabcomplete
+        }
     }
 
     public void onDisable() {

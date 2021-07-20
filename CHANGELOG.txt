@@ -88,3 +88,5 @@
 - Fixed some async errors with "/nml (un)freeze"
 - Fixed mobs defined in `mob-freezing.freeze-bypass-mobs` still being frozen
 
+2.3.3:
+- Added command tabcomplete feature
