@@ -90,3 +90,6 @@
 
 2.3.3:
 - Added command tabcomplete feature
+
+2.3.4
+- Fixed IllegalArgumentException if "config.spawners.max-mobs-per-minute" is too large

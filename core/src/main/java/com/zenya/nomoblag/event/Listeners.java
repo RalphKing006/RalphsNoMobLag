@@ -367,12 +367,12 @@ public class Listeners implements Listener {
 
                     //Handle max mobs per minute
                     spawner.setSpawnCount(1);
-                    spawner.setMinSpawnDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
-                    spawner.setMaxSpawnDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
+                    spawner.setMinSpawnDelay((int) Math.ceil(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
+                    spawner.setMaxSpawnDelay((int) Math.ceil(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
 
                 } catch(NoSuchMethodError exc) {
                     //Silence errors
-                    spawner.setDelay(Integer.valueOf(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
+                    spawner.setDelay((int) Math.ceil(60*20/ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
                 }
             }
         }.runTask(NoMobLag.getInstance());
