@@ -1,8 +1,5 @@
 package com.zenya.nomoblag.event;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.particles.ParticleDisplay;
-import com.cryptomorin.xseries.particles.XParticle;
 import com.zenya.nomoblag.NoMobLag;
 import com.zenya.nomoblag.file.ConfigManager;
 import com.zenya.nomoblag.file.MessagesManager;
@@ -13,7 +10,9 @@ import com.zenya.nomoblag.scheduler.TrackTPSTask;
 import com.zenya.nomoblag.util.ChatUtils;
 import com.zenya.nomoblag.util.LocationUtils;
 import com.zenya.nomoblag.util.MetaUtils;
+import com.zenya.nomoblag.util.ParticleDisplay;
 import com.zenya.nomoblag.util.SpawnerUtils;
+import com.zenya.nomoblag.util.XParticle;
 import org.bukkit.*;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.*;
@@ -60,7 +59,7 @@ public class Listeners implements Listener {
         if(!ConfigManager.getInstance().getBool("spawners.enabled")) return;
         if(e.isCancelled()) return;
 
-        if(e.getBlockPlaced().getType().equals(XMaterial.SPAWNER.parseMaterial())) {
+        if(e.getBlockPlaced().getType() == Material.SPAWNER) {
             Location blockLoc = e.getBlock().getLocation();
 
             CreatureSpawner nearestSpawner = SpawnerUtils.getNearestSpawner(blockLoc, ConfigManager.getInstance().getInt("spawners.minimum-spawner-distance"));

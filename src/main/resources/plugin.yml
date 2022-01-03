@@ -1,8 +1,8 @@
 name: NoMobLag
 main: com.zenya.nomoblag.NoMobLag
-version: 2.3.4
+version: ${project.version}
 author: Zenya4
-api-version: 1.13
+api-version: 1.18
 
 commands:
   nomoblag:
