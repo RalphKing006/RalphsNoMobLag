@@ -7,34 +7,35 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class FreezeEntityTask implements NMLTask {
-    private BukkitTask bukkitTask;
-    private LivingEntity entity;
 
-    public FreezeEntityTask(LivingEntity entity) {
-        this.entity = entity;
-        runTask();
-    }
+  private BukkitTask bukkitTask;
+  private LivingEntity entity;
 
-    @Override
-    public TaskKey getKey() {
-        return TaskKey.FREEZE_ENTITY_TASK;
-    }
+  public FreezeEntityTask(LivingEntity entity) {
+    this.entity = entity;
+    runTask();
+  }
 
-    @Override
-    public void runTask() {
-        int rate = ConfigManager.getInstance().getInt("mob-freezing.disable-ai-after");
-        entity.setAI(true);
+  @Override
+  public TaskKey getKey() {
+    return TaskKey.FREEZE_ENTITY_TASK;
+  }
 
-        bukkitTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                entity.setAI(false);
-            }
-        }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 20*rate);
-    }
+  @Override
+  public void runTask() {
+    int rate = ConfigManager.getInstance().getInt("mob-freezing.disable-ai-after");
+    entity.setAI(true);
 
-    @Override
-    public BukkitTask getTask() {
-        return bukkitTask;
-    }
+    bukkitTask = new BukkitRunnable() {
+      @Override
+      public void run() {
+        entity.setAI(false);
+      }
+    }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 20 * rate);
+  }
+
+  @Override
+  public BukkitTask getTask() {
+    return bukkitTask;
+  }
 }

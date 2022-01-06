@@ -7,34 +7,35 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class DespawnEntityTask implements NMLTask {
-    private BukkitTask bukkitTask;
-    private LivingEntity entity;
 
-    public DespawnEntityTask(LivingEntity entity) {
-        this.entity = entity;
-        runTask();
-    }
+  private BukkitTask bukkitTask;
+  private LivingEntity entity;
 
-    @Override
-    public TaskKey getKey() {
-        return TaskKey.DESPAWN_ENTITY_TASK;
-    }
+  public DespawnEntityTask(LivingEntity entity) {
+    this.entity = entity;
+    runTask();
+  }
 
-    //Task cannot be async since 1.17
-    @Override
-    public void runTask() {
-        int rate = ConfigManager.getInstance().getInt("spawners.mob-despawn-rate");
+  @Override
+  public TaskKey getKey() {
+    return TaskKey.DESPAWN_ENTITY_TASK;
+  }
 
-        bukkitTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                entity.remove();
-            }
-        }.runTaskLater(NoMobLag.getInstance(), 20*rate);
-    }
+  //Task cannot be async since 1.17
+  @Override
+  public void runTask() {
+    int rate = ConfigManager.getInstance().getInt("spawners.mob-despawn-rate");
 
-    @Override
-    public BukkitTask getTask() {
-        return bukkitTask;
-    }
+    bukkitTask = new BukkitRunnable() {
+      @Override
+      public void run() {
+        entity.remove();
+      }
+    }.runTaskLater(NoMobLag.getInstance(), 20 * rate);
+  }
+
+  @Override
+  public BukkitTask getTask() {
+    return bukkitTask;
+  }
 }
