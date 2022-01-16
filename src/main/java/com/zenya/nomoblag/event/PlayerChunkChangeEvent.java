@@ -49,7 +49,7 @@ public class PlayerChunkChangeEvent extends Event implements Cancellable {
   }
 
   public Chunk[] getNearbyChunks(int radius) {
-    ArrayList<Chunk> nearbyChunks = new ArrayList<Chunk>();
+    ArrayList<Chunk> nearbyChunks = new ArrayList<>();
     int cX = getChunk().getX();
     int cZ = getChunk().getZ();
 
@@ -58,7 +58,7 @@ public class PlayerChunkChangeEvent extends Event implements Cancellable {
         nearbyChunks.add(getChunk().getWorld().getChunkAt(x, z));
       }
     }
-    return nearbyChunks.toArray(new Chunk[nearbyChunks.size()]);
+    return nearbyChunks.toArray(Chunk[]::new);
   }
 
   @Override

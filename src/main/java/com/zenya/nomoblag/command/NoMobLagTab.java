@@ -15,10 +15,11 @@ public class NoMobLagTab implements TabCompleter {
     List<String> matches = new ArrayList<>();
 
     switch (args.length) {
-      case 0:
+      case 0 -> {
         matches.add("nomoblag");
         return StringUtil.copyPartialMatches(cmd.getName(), matches, new ArrayList<>());
-      case 1:
+      }
+      case 1 -> {
         matches.add("help");
         matches.add("stats");
         matches.add("reload");
@@ -27,20 +28,23 @@ public class NoMobLagTab implements TabCompleter {
         matches.add("setcollisions");
         matches.add("loadspawners");
         return StringUtil.copyPartialMatches(args[0], matches, new ArrayList<>());
+      }
 
-      case 2:
+      case 2 -> {
         switch (args[0].toLowerCase()) {
-          case "freeze":
-          case "unfreeze":
+          case "freeze", "unfreeze" -> {
             matches.add("chunk");
             matches.add("world");
             matches.add("all");
             return StringUtil.copyPartialMatches(args[1], matches, new ArrayList<>());
-          case "setcollisions":
+        }
+          case "setcollisions" -> {
             matches.add("true");
             matches.add("false");
             return StringUtil.copyPartialMatches(args[1], matches, new ArrayList<>());
         }
+        }
+      }
     }
     return null;
   }

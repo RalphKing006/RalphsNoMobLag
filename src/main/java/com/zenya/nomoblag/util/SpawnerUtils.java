@@ -8,7 +8,7 @@ import org.bukkit.Material;
 public class SpawnerUtils {
 
   private static ArrayList<CreatureSpawner> getNearbySpawners(Location loc, double maxDist) {
-    ArrayList<CreatureSpawner> spawners = new ArrayList<CreatureSpawner>();
+    ArrayList<CreatureSpawner> spawners = new ArrayList<>();
     double minX = loc.getX() - maxDist;
     double maxX = loc.getX() + maxDist;
     double minY = loc.getY() - maxDist;
@@ -30,7 +30,7 @@ public class SpawnerUtils {
 
   public static CreatureSpawner getNearestSpawner(Location loc, double maxDist) {
     ArrayList<CreatureSpawner> spawners = getNearbySpawners(loc, maxDist);
-    if (spawners == null || spawners.size() == 0) {
+    if (spawners.isEmpty()) {
       return null;
     }
 

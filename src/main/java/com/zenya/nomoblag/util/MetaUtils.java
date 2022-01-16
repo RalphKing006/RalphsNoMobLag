@@ -21,7 +21,7 @@ public class MetaUtils {
   }
 
   public static String getMetaValue(Entity entity, String meta) {
-    if (!(hasMeta(entity, meta)) || entity.getMetadata(meta).size() == 0) {
+    if (!(hasMeta(entity, meta)) || entity.getMetadata(meta).isEmpty()) {
       return "";
     }
     return entity.getMetadata(meta).get(0).asString();

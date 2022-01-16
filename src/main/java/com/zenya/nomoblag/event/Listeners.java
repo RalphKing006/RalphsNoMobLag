@@ -52,7 +52,7 @@ public class Listeners implements Listener {
     if (!MetaUtils.hasMeta(e.getEntity(), "no-endermite-aggro")) {
       return;
     }
-    if (e.getTarget().getType().equals(EntityType.valueOf("ENDERMITE"))) {
+    if (e.getEntity().getType() == EntityType.ENDERMITE) {
       e.setTarget(null);
       e.setCancelled(true);
     }
@@ -154,9 +154,9 @@ public class Listeners implements Listener {
         }
 
         for (Entity ent : proj.getNearbyEntities(5, 5, 5)) {
-          if (ent instanceof Creature) {
+          if (ent instanceof Creature creature) {
             try {
-              new SetCollidableTask((Creature) ent);
+              new SetCollidableTask(creature);
             } catch (NoSuchMethodError exc) {
               //Silence 1.8 errors
             }
@@ -173,12 +173,12 @@ public class Listeners implements Listener {
     List<Creature> mobs = new ArrayList<>();
     for (Chunk chunk : e.getNearbyChunks(1)) {
       for (Entity ent : chunk.getEntities()) {
-        if (ent instanceof Creature) {
-          mobs.add((Creature) ent);
+        if (ent instanceof Creature creature) {
+          mobs.add(creature);
         }
       }
     }
-    if (mobs == null || mobs.size() == 0) {
+    if (mobs.isEmpty()) {
       return;
     }
 
@@ -245,7 +245,7 @@ public class Listeners implements Listener {
 
     //Check if mob spawn reason allows for blocking of mob spawning
     boolean canBlock = false;
-    if (!(ConfigManager.getInstance().getList("mob-spawning.spawnreason-tps-block") == null) && !(ConfigManager.getInstance().getList("mob-spawning.spawnreason-tps-block").size() == 0)) {
+    if (!(ConfigManager.getInstance().getList("mob-spawning.spawnreason-tps-block") == null) && !ConfigManager.getInstance().getList("mob-spawning.spawnreason-tps-block").isEmpty()) {
       for (String spawnReason : ConfigManager.getInstance().getList("mob-spawning.spawnreason-tps-block")) {
         if (e.getSpawnReason().name().equals(spawnReason.toUpperCase())) {
           canBlock = true;
@@ -265,7 +265,7 @@ public class Listeners implements Listener {
 
     //Enforce playercount spawn chance
     List<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
-    if (keyList != null && keyList.size() != 0) {
+    if (keyList != null && !keyList.isEmpty()) {
       int smallestDiff = Math.abs(Integer.valueOf(keyList.get(0)) - playercount);
       int smallestIndex = 0;
       for (int i = 1; i < keyList.size(); i++) {
@@ -388,7 +388,6 @@ public class Listeners implements Listener {
         if (e.getEntity().getWorld().getEnvironment().equals(World.Environment.THE_END)) {
           if (e.getEntity().getType().equals(EntityType.valueOf("ENDERMAN"))) {
             MetaUtils.setMeta(e.getEntity(), "no-endermite-aggro", true);
-            return;
           }
         }
       }

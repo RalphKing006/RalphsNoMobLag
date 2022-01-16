@@ -36,7 +36,7 @@ public class TrackPlayerTask implements NMLTask {
       @Override
       public void run() {
         playerCoords.thenAcceptAsync(coordMap -> {
-          if (Bukkit.getOnlinePlayers() != null && Bukkit.getOnlinePlayers().size() != 0) {
+          if (!Bukkit.getOnlinePlayers().isEmpty()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
               //Chunk change event
               if (player.getLocation().getChunk().getX() != coordMap.getOrDefault(player, new Location(player.getWorld(), 0, 0, 0)).getChunk().getX() || player.getLocation().getChunk().getZ() != coordMap.getOrDefault(player, new Location(player.getWorld(), 0, 0, 0)).getChunk().getZ()) {
@@ -59,7 +59,7 @@ public class TrackPlayerTask implements NMLTask {
     BukkitTask task2 = new BukkitRunnable() {
       public void run() {
         playerCoords.thenAcceptAsync(coordMap -> {
-          if (Bukkit.getOnlinePlayers() != null && Bukkit.getOnlinePlayers().size() != 0) {
+          if (!Bukkit.getOnlinePlayers().isEmpty()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
               if (!coordMap.containsKey(player)) {
                 coordMap.put(player, new Location(player.getWorld(), 0, 0, 0));
@@ -75,7 +75,7 @@ public class TrackPlayerTask implements NMLTask {
       @Override
       public void run() {
         playerCoords.thenAcceptAsync(coordMap -> {
-          if (Bukkit.getOnlinePlayers() != null && Bukkit.getOnlinePlayers().size() != 0) {
+          if (!Bukkit.getOnlinePlayers().isEmpty()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
               coordMap.put(player, player.getLocation());
             }
@@ -89,8 +89,8 @@ public class TrackPlayerTask implements NMLTask {
       @Override
       public void run() {
         playerCoords.thenAcceptAsync(coordMap -> {
-          if (Bukkit.getOnlinePlayers() != null && Bukkit.getOnlinePlayers().size() != 0) {
-            if (coordMap.keySet() != null && coordMap.keySet().size() != 0) {
+          if (!Bukkit.getOnlinePlayers().isEmpty()) {
+            if (coordMap.keySet() != null && !coordMap.keySet().isEmpty()) {
               for (Player player : coordMap.keySet()) {
                 if (!Bukkit.getOnlinePlayers().contains(player)) {
                   coordMap.remove(player);

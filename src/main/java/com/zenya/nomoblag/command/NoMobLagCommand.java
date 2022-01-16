@@ -68,7 +68,7 @@ public class NoMobLagCommand implements CommandExecutor {
             int tpsSpawnChance = ConfigManager.getInstance().getInt("mob-spawning.spawn-chance-at-tps." + String.valueOf((int) tps));
             int playerSpawnChance = 100;
             List<String> keyList = ConfigManager.getInstance().getKeys("mob-spawning.spawn-chance-at-playercount");
-            if (keyList != null && keyList.size() != 0) {
+            if (keyList != null && !keyList.isEmpty()) {
               int smallestDiff = Math.abs(Integer.valueOf(keyList.get(0)) - playercount);
               int smallestIndex = 0;
               for (int i = 1; i < keyList.size(); i++) {
@@ -92,8 +92,7 @@ public class NoMobLagCommand implements CommandExecutor {
                 }
               }
               for (Entity ent : world.getEntities()) {
-                if (ent instanceof LivingEntity) {
-                  LivingEntity entity = (LivingEntity) ent;
+                if (ent instanceof LivingEntity entity) {
                   totalMobs++;
                   if (!entity.hasAI()) {
                     frozenMobs++;
@@ -131,16 +130,15 @@ public class NoMobLagCommand implements CommandExecutor {
             for (World world : Bukkit.getServer().getWorlds()) {
               for (Chunk chunk : world.getLoadedChunks()) {
                 for (BlockState state : chunk.getTileEntities()) {
-                  if (state instanceof CreatureSpawner) {
-                    CreatureSpawner spawner = (CreatureSpawner) state;
+                  if (state instanceof CreatureSpawner spawner) {
                     //Handle spawner activation range
                     spawner.setSpawnRange(4);
                     spawner.setRequiredPlayerRange(ConfigManager.getInstance().getInt("spawners.activation-range"));
 
                     //Handle max mobs per minute
                     spawner.setSpawnCount(1);
-                    spawner.setMinSpawnDelay(Integer.valueOf(60 * 20 / ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
-                    spawner.setMaxSpawnDelay(Integer.valueOf(60 * 20 / ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
+                    spawner.setMinSpawnDelay(60 * 20 / ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute"));
+                    spawner.setMaxSpawnDelay(60 * 20 / ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute"));
                     spawners++;
                   }
                 }
@@ -173,8 +171,7 @@ public class NoMobLagCommand implements CommandExecutor {
             @Override
             public void run() {
               for (Entity ent : player.getLocation().getChunk().getEntities()) {
-                if (ent instanceof LivingEntity) {
-                  LivingEntity entity = (LivingEntity) ent;
+                if (ent instanceof LivingEntity entity) {
                   if (!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
                     if (entity.hasAI()) {
                       entity.setAI(false);
@@ -201,8 +198,7 @@ public class NoMobLagCommand implements CommandExecutor {
             @Override
             public void run() {
               for (Entity ent : player.getWorld().getEntities()) {
-                if (ent instanceof LivingEntity) {
-                  LivingEntity entity = (LivingEntity) ent;
+                if (ent instanceof LivingEntity entity) {
                   if (!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
                     if (entity.hasAI()) {
                       entity.setAI(false);
@@ -225,8 +221,7 @@ public class NoMobLagCommand implements CommandExecutor {
             public void run() {
               for (World world : Bukkit.getServer().getWorlds()) {
                 for (Entity ent : world.getEntities()) {
-                  if (ent instanceof LivingEntity) {
-                    LivingEntity entity = (LivingEntity) ent;
+                  if (ent instanceof LivingEntity entity) {
                     if (!ConfigManager.getInstance().listContains("mob-freezing.freeze-bypass-mobs", entity.getType().name())) {
                       if (entity.hasAI()) {
                         entity.setAI(false);
@@ -261,8 +256,7 @@ public class NoMobLagCommand implements CommandExecutor {
             public void run() {
               mobloop:
               for (Entity ent : player.getLocation().getChunk().getEntities()) {
-                if (ent instanceof LivingEntity) {
-                  LivingEntity entity = (LivingEntity) ent;
+                if (ent instanceof LivingEntity entity) {
                   for (String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
                     if (entity.hasMetadata(nbt)) {
                       continue mobloop;
@@ -293,8 +287,7 @@ public class NoMobLagCommand implements CommandExecutor {
             public void run() {
               mobloop:
               for (Entity ent : player.getWorld().getEntities()) {
-                if (ent instanceof LivingEntity) {
-                  LivingEntity entity = (LivingEntity) ent;
+                if (ent instanceof LivingEntity entity) {
                   for (String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
                     if (entity.hasMetadata(nbt)) {
                       continue mobloop;
@@ -321,8 +314,7 @@ public class NoMobLagCommand implements CommandExecutor {
               for (World world : Bukkit.getServer().getWorlds()) {
                 mobloop:
                 for (Entity ent : world.getEntities()) {
-                  if (ent instanceof LivingEntity) {
-                    LivingEntity entity = (LivingEntity) ent;
+                  if (ent instanceof LivingEntity entity) {
                     for (String nbt : ConfigManager.getInstance().getList("mob-freezing.no-ai-tags")) {
                       if (entity.hasMetadata(nbt)) {
                         continue mobloop;
@@ -356,8 +348,7 @@ public class NoMobLagCommand implements CommandExecutor {
               try {
                 for (World world : Bukkit.getServer().getWorlds()) {
                   for (Entity ent : world.getEntities()) {
-                    if (ent instanceof LivingEntity) {
-                      LivingEntity entity = (LivingEntity) ent;
+                    if (ent instanceof LivingEntity entity) {
                       if (!entity.isCollidable()) {
                         entity.setCollidable(true);
                         collidable++;
@@ -383,8 +374,7 @@ public class NoMobLagCommand implements CommandExecutor {
               try {
                 for (World world : Bukkit.getServer().getWorlds()) {
                   for (Entity ent : world.getEntities()) {
-                    if (ent instanceof LivingEntity) {
-                      LivingEntity entity = (LivingEntity) ent;
+                    if (ent instanceof LivingEntity entity) {
                       if (entity.isCollidable()) {
                         entity.setCollidable(false);
                         collidable++;

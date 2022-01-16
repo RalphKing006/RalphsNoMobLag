@@ -42,7 +42,7 @@ public class TrackTPSTask implements NMLTask {
 
     //Task to populate avgTps
     new BukkitRunnable() {
-      ArrayList<Float> tpsList = new ArrayList<Float>();
+      ArrayList<Float> tpsList = new ArrayList<>();
 
       @Override
       public void run() {

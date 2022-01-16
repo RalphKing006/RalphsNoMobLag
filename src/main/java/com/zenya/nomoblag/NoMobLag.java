@@ -18,6 +18,7 @@ public class NoMobLag extends JavaPlugin {
 
   private static NoMobLag instance;
 
+  @Override
   public void onEnable() {
     instance = this;
 
@@ -36,15 +37,7 @@ public class NoMobLag extends JavaPlugin {
 
     //Register commands
     this.getCommand("nomoblag").setExecutor(new NoMobLagCommand());
-    try {
-      this.getCommand("nomoblag").setTabCompleter(new NoMobLagTab());
-    } catch (Exception exc) {
-      //Do nothing, version doesn't support tabcomplete
-    }
-  }
-
-  public void onDisable() {
-
+    this.getCommand("nomoblag").setTabCompleter(new NoMobLagTab());
   }
 
   public static NoMobLag getInstance() {
