@@ -4,13 +4,13 @@ import org.bukkit.scheduler.BukkitTask;
 
 public interface NMLTask {
 
-  TaskKey getKey();
+    TaskKey getKey();
 
-  void runTask();
+    void runTask();
 
-  BukkitTask getTask();
+    BukkitTask getTask();
 
-  static NMLTask getInstance() {
-    return null;
-  }
+    static NMLTask getInstance() {
+        return null;
+    }
 }

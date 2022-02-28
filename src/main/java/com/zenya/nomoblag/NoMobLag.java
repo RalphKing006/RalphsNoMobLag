@@ -16,52 +16,52 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NoMobLag extends JavaPlugin {
 
-  private static NoMobLag instance;
+    private static NoMobLag instance;
 
-  @Override
-  public void onEnable() {
-    instance = this;
+    @Override
+    public void onEnable() {
+        instance = this;
 
-    new MetricsLite(this, 13821);
-    checkForUpdate();
+        new MetricsLite(this, 13821);
+        checkForUpdate();
 
-    //Register all runnables
-    TaskManager.getInstance();
+        //Register all runnables
+        TaskManager.getInstance();
 
-    //Init config and messages
-    ConfigManager.getInstance();
-    MessagesManager.getInstance();
+        //Init config and messages
+        ConfigManager.getInstance();
+        MessagesManager.getInstance();
 
-    //Register events
-    this.getServer().getPluginManager().registerEvents(new Listeners(), this);
+        //Register events
+        this.getServer().getPluginManager().registerEvents(new Listeners(), this);
 
-    //Register commands
-    this.getCommand("nomoblag").setExecutor(new NoMobLagCommand());
-    this.getCommand("nomoblag").setTabCompleter(new NoMobLagTab());
-  }
-
-  public static NoMobLag getInstance() {
-    return instance;
-  }
-
-  private void checkForUpdate() {
-    Logger logger = getLogger();
-    FileConfiguration pluginConfig = getConfig();
-    Updater updater = new Updater(this, 98912, false);
-    Updater.UpdateResult result = updater.getResult();
-    if (result != UpdateResult.UPDATE_AVAILABLE) {
-      return;
+        //Register commands
+        this.getCommand("nomoblag").setExecutor(new NoMobLagCommand());
+        this.getCommand("nomoblag").setTabCompleter(new NoMobLagTab());
     }
-    if (!pluginConfig.getBoolean("download-update")) {
-      logger.info("===== UPDATE AVAILABLE ====");
-      logger.info("https://www.spigotmc.org/resources/98912");
-      logger.log(Level.INFO, "Installed Version: {0} New Version:{1}", new Object[]{updater.getOldVersion(), updater.getVersion()});
-      logger.info("===== UPDATE AVAILABLE ====");
-      return;
+
+    public static NoMobLag getInstance() {
+        return instance;
     }
-    logger.info("==== UPDATE AVAILABLE ====");
-    logger.info("====    DOWNLOADING   ====");
-    updater.downloadUpdate();
-  }
+
+    private void checkForUpdate() {
+        Logger logger = getLogger();
+        FileConfiguration pluginConfig = getConfig();
+        Updater updater = new Updater(this, 98912, false);
+        Updater.UpdateResult result = updater.getResult();
+        if (result != UpdateResult.UPDATE_AVAILABLE) {
+            return;
+        }
+        if (!pluginConfig.getBoolean("download-update")) {
+            logger.info("===== UPDATE AVAILABLE ====");
+            logger.info("https://www.spigotmc.org/resources/98912");
+            logger.log(Level.INFO, "Installed Version: {0} New Version:{1}", new Object[]{updater.getOldVersion(), updater.getVersion()});
+            logger.info("===== UPDATE AVAILABLE ====");
+            return;
+        }
+        logger.info("==== UPDATE AVAILABLE ====");
+        logger.info("====    DOWNLOADING   ====");
+        updater.downloadUpdate();
+    }
 
 }
