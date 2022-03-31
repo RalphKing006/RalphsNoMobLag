@@ -263,8 +263,7 @@ public class ParticleDisplay implements Cloneable {
         String materialdata = config.getString("materialdata"); // material name
 
         float size = 1.0f;
-        if (display.data instanceof float[]) {
-            float[] datas = (float[]) display.data;
+        if (display.data instanceof float[] datas) {
             if (datas.length >= 4) {
                 if (config.isSet("size")) {
                     datas[3] = size = (float) config.getDouble("size");
@@ -341,13 +340,16 @@ public class ParticleDisplay implements Cloneable {
         Objects.requireNonNull(rotation, "Rotation vector cannot be null");
 
         switch (axis) {
-            case X:
+            case X -> {
                 return rotateAround(location, axis, rotation.getX());
-            case Y:
+            }
+            case Y -> {
                 return rotateAround(location, axis, rotation.getY());
-            case Z:
+            }
+            case Z -> {
                 return rotateAround(location, axis, rotation.getZ());
-            default:
+            }
+            default ->
                 throw new AssertionError("Unknown rotation axis: " + axis);
         }
     }
@@ -385,22 +387,22 @@ public class ParticleDisplay implements Cloneable {
         double sin = Math.sin(angle);
 
         switch (axis) {
-            case X: {
+            case X -> {
                 double y = location.getY() * cos - location.getZ() * sin;
                 double z = location.getY() * sin + location.getZ() * cos;
                 return location.setY(y).setZ(z);
             }
-            case Y: {
+            case Y -> {
                 double x = location.getX() * cos + location.getZ() * sin;
                 double z = location.getX() * -sin + location.getZ() * cos;
                 return location.setX(x).setZ(z);
             }
-            case Z: {
+            case Z -> {
                 double x = location.getX() * cos - location.getY() * sin;
                 double y = location.getX() * sin + location.getY() * cos;
                 return location.setX(x).setY(y);
             }
-            default:
+            default ->
                 throw new AssertionError("Unknown rotation axis: " + axis);
         }
     }

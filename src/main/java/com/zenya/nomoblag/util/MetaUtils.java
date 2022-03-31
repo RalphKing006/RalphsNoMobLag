@@ -11,12 +11,12 @@ public class MetaUtils {
     }
 
     public static void setMeta(Entity entity, String meta, Object value) {
-        entity.setMetadata(meta, new FixedMetadataValue(NoMobLag.getInstance(), value));
+        entity.setMetadata(meta, new FixedMetadataValue(NoMobLag.instance(), value));
     }
 
     public static void clearMeta(Entity entity, String meta) {
         if (hasMeta(entity, meta)) {
-            entity.removeMetadata(meta, NoMobLag.getInstance());
+            entity.removeMetadata(meta, NoMobLag.instance());
         }
     }
 

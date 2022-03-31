@@ -3,12 +3,13 @@ package com.zenya.nomoblag.util;
 import org.bukkit.Location;
 import org.bukkit.block.CreatureSpawner;
 import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Material;
 
 public class SpawnerUtils {
 
-    private static ArrayList<CreatureSpawner> getNearbySpawners(Location loc, double maxDist) {
-        ArrayList<CreatureSpawner> spawners = new ArrayList<>();
+    private static List<CreatureSpawner> getNearbySpawners(Location loc, double maxDist) {
+        List<CreatureSpawner> spawners = new ArrayList<>();
         double minX = loc.getX() - maxDist;
         double maxX = loc.getX() + maxDist;
         double minY = loc.getY() - maxDist;
@@ -29,7 +30,7 @@ public class SpawnerUtils {
     }
 
     public static CreatureSpawner getNearestSpawner(Location loc, double maxDist) {
-        ArrayList<CreatureSpawner> spawners = getNearbySpawners(loc, maxDist);
+        List<CreatureSpawner> spawners = getNearbySpawners(loc, maxDist);
         if (spawners.isEmpty()) {
             return null;
         }

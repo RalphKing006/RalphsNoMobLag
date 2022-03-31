@@ -31,7 +31,7 @@ public class FreezeEntityTask implements NMLTask {
             public void run() {
                 entity.setAI(false);
             }
-        }.runTaskLaterAsynchronously(NoMobLag.getInstance(), 20 * rate);
+        }.runTaskLaterAsynchronously(NoMobLag.instance(), 20 * rate);
     }
 
     @Override

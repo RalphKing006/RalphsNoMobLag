@@ -34,7 +34,7 @@ public class ConfigManager {
     };
 
     private static ConfigManager configManager;
-    private Plugin plugin = NoMobLag.getInstance();
+    private Plugin plugin = NoMobLag.instance();
     private FileConfiguration origConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("config.yml")));
     private File configFile;
     private FileConfiguration config;

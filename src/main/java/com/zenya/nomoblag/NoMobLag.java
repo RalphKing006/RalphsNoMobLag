@@ -40,7 +40,7 @@ public class NoMobLag extends JavaPlugin {
         this.getCommand("nomoblag").setTabCompleter(new NoMobLagTab());
     }
 
-    public static NoMobLag getInstance() {
+    public static NoMobLag instance() {
         return instance;
     }
 

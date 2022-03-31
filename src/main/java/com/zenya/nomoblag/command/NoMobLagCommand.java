@@ -110,7 +110,7 @@ public class NoMobLagCommand implements CommandExecutor {
                         ChatUtils.sendMessage(sender, "&bSpawn Rate: &9" + String.valueOf(finalSpawnChance) + "%");
                         ChatUtils.sendMessage(sender, "&8&m*]----------------------------------------[*&r");
                     }
-                }.runTask(NoMobLag.getInstance());
+                }.runTask(NoMobLag.instance());
                 return true;
             }
 
@@ -146,7 +146,7 @@ public class NoMobLagCommand implements CommandExecutor {
                         }
                         ChatUtils.sendMessage(sender, "&dSpawner limits have been imposed on &5" + String.valueOf(spawners) + " &dspawners");
                     }
-                }.runTask(NoMobLag.getInstance());
+                }.runTask(NoMobLag.instance());
                 return true;
             }
 
@@ -182,7 +182,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&4" + String.valueOf(frozen) + " &cmobs have been frozen");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
 
@@ -209,7 +209,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&4" + String.valueOf(frozen) + " &cmobs have been frozen");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
 
@@ -233,7 +233,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&4" + String.valueOf(frozen) + " &cmobs have been frozen");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
                 //Wrong arg2 for freeze
@@ -270,7 +270,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&2" + String.valueOf(unfrozen) + " &amobs have been unfrozen");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
 
@@ -301,7 +301,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(player, "&2" + String.valueOf(unfrozen) + " &amobs have been unfrozen");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
 
@@ -329,7 +329,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&2" + String.valueOf(unfrozen) + " &amobs have been unfrozen");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
                 //Wrong arg2 for unfreeze
@@ -361,7 +361,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&aEnabled collision physics for &2" + String.valueOf(collidable) + " &aentities");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
 
@@ -387,7 +387,7 @@ public class NoMobLagCommand implements CommandExecutor {
                             }
                             ChatUtils.sendMessage(sender, "&cDisabled collision physics for &4" + String.valueOf(collidable) + " &centities");
                         }
-                    }.runTask(NoMobLag.getInstance());
+                    }.runTask(NoMobLag.instance());
                     return true;
                 }
 

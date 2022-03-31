@@ -38,7 +38,7 @@ public class TrackTPSTask implements NMLTask {
                     instTps = (float) (1000 / tdiff);
                 }
             }
-        }.runTaskTimer(NoMobLag.getInstance(), 0, 1);
+        }.runTaskTimer(NoMobLag.instance(), 0, 1);
 
         //Task to populate avgTps
         new BukkitRunnable() {
@@ -58,7 +58,7 @@ public class TrackTPSTask implements NMLTask {
                 }
                 avgTps = totalTps / tpsList.size();
             }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 20, 20);
+        }.runTaskTimerAsynchronously(NoMobLag.instance(), 20, 20);
     }
 
     @Override

@@ -629,12 +629,15 @@ public final class XParticle {
                         z = radius * Math.sin(-theta + angle);
 
                         // Eye shaped blackhole
-                        if (mode == 2) {
-                            phi = Math.atan2(z, x);
-                        } else if (mode == 3) {
-                            phi = Math.atan2(x, z);
-                        } else if (mode == 4) {
-                            Math.atan2(Math.log(x), Math.log(z));
+                        switch (mode) {
+                            case 2 ->
+                                phi = Math.atan2(z, x);
+                            case 3 ->
+                                phi = Math.atan2(x, z);
+                            case 4 ->
+                                Math.atan2(Math.log(x), Math.log(z));
+                            default -> {
+                            }
                         }
 
                         xDirection = -Math.cos(phi);
@@ -2266,6 +2269,7 @@ public final class XParticle {
             final double rateDiv = Math.PI / rate;
             double times = Math.PI / 4;
 
+            @Override
             public void run() {
                 times += addition;
                 for (double theta = 0; theta <= PII; theta += rateDiv) {

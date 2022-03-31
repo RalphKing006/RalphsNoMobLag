@@ -8,9 +8,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerChunkChangeEvent extends Event implements Cancellable {
 
+    private static final HandlerList handlers = new HandlerList();
     private boolean isCancelled;
     private Player player;
 
@@ -19,19 +21,19 @@ public class PlayerChunkChangeEvent extends Event implements Cancellable {
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public Player player() {
         return player;
     }
 
-    public Chunk getChunk() {
+    public Chunk chunk() {
         return player.getLocation().getChunk();
     }
 
-    public World getWorld() {
+    public World world() {
         return player.getWorld();
     }
 
-    public Chunk getPreviousChunk() {
+    public Chunk previousChunk() {
         double relativeX = player.getVelocity().getX();
         double relativeZ = player.getVelocity().getZ();
         if (relativeX > 0) {
@@ -45,17 +47,17 @@ public class PlayerChunkChangeEvent extends Event implements Cancellable {
             relativeZ = -1;
         }
 
-        return getChunk().getWorld().getChunkAt(getChunk().getX() + (int) relativeX, getChunk().getZ() + (int) relativeZ);
+        return chunk().getWorld().getChunkAt(chunk().getX() + (int) relativeX, chunk().getZ() + (int) relativeZ);
     }
 
     public Chunk[] getNearbyChunks(int radius) {
-        ArrayList<Chunk> nearbyChunks = new ArrayList<>();
-        int cX = getChunk().getX();
-        int cZ = getChunk().getZ();
+        List<Chunk> nearbyChunks = new ArrayList<>();
+        int cX = chunk().getX();
+        int cZ = chunk().getZ();
 
         for (int x = cX - radius; x <= cX + radius; x++) {
             for (int z = cZ - radius; z <= cZ + radius; z++) {
-                nearbyChunks.add(getChunk().getWorld().getChunkAt(x, z));
+                nearbyChunks.add(chunk().getWorld().getChunkAt(x, z));
             }
         }
         return nearbyChunks.toArray(Chunk[]::new);
@@ -70,9 +72,6 @@ public class PlayerChunkChangeEvent extends Event implements Cancellable {
     public void setCancelled(boolean cancelled) {
         this.isCancelled = cancelled;
     }
-
-    //Default custom event methods
-    private static final HandlerList handlers = new HandlerList();
 
     @Override
     public HandlerList getHandlers() {

@@ -32,7 +32,7 @@ public class MessagesManager {
     };
 
     private static MessagesManager messagesManager;
-    private Plugin plugin = NoMobLag.getInstance();
+    private Plugin plugin = NoMobLag.instance();
     private FileConfiguration origMessages = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("messages.yml")));
     private File messagesFile;
     private FileConfiguration messages;

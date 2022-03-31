@@ -45,7 +45,7 @@ public class TrackPlayerTask implements NMLTask {
                                     public void run() {
                                         Bukkit.getPluginManager().callEvent(new PlayerChunkChangeEvent(player));
                                     }
-                                }.runTask(NoMobLag.getInstance());
+                                }.runTask(NoMobLag.instance());
                                 //Force update
                                 coordMap.put(player, player.getLocation());
                             }
@@ -53,10 +53,11 @@ public class TrackPlayerTask implements NMLTask {
                     }
                 });
             }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 20 / 2);
+        }.runTaskTimerAsynchronously(NoMobLag.instance(), 0, 20 / 2);
 
         //Task to initialise player
         BukkitTask task2 = new BukkitRunnable() {
+            @Override
             public void run() {
                 playerCoords.thenAcceptAsync(coordMap -> {
                     if (!Bukkit.getOnlinePlayers().isEmpty()) {
@@ -68,7 +69,7 @@ public class TrackPlayerTask implements NMLTask {
                     }
                 });
             }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 20 * 1);
+        }.runTaskTimerAsynchronously(NoMobLag.instance(), 0, 20 * 1);
 
         //Task to update player location
         BukkitTask task3 = new BukkitRunnable() {
@@ -82,7 +83,7 @@ public class TrackPlayerTask implements NMLTask {
                     }
                 });
             }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 20 * 5);
+        }.runTaskTimerAsynchronously(NoMobLag.instance(), 0, 20 * 5);
 
         //Task to remove old player entries
         BukkitTask task4 = new BukkitRunnable() {
@@ -102,7 +103,7 @@ public class TrackPlayerTask implements NMLTask {
                     }
                 });
             }
-        }.runTaskTimerAsynchronously(NoMobLag.getInstance(), 0, 20 * 10);
+        }.runTaskTimerAsynchronously(NoMobLag.instance(), 0, 20 * 10);
     }
 
     @Override

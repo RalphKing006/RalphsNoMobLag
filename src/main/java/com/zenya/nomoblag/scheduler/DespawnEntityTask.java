@@ -31,7 +31,7 @@ public class DespawnEntityTask implements NMLTask {
             public void run() {
                 entity.remove();
             }
-        }.runTaskLater(NoMobLag.getInstance(), 20 * rate);
+        }.runTaskLater(NoMobLag.instance(), 20 * rate);
     }
 
     @Override

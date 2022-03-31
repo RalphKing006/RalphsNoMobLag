@@ -74,7 +74,7 @@ public class Listeners implements Listener {
             CreatureSpawner nearestSpawner = SpawnerUtils.getNearestSpawner(blockLoc, ConfigManager.getInstance().getInt("spawners.minimum-spawner-distance"));
             if (nearestSpawner != null) {
                 ChatUtils.sendMessage(e.getPlayer(), MessagesManager.getInstance().getString("spawners-too-close"));
-                XParticle.line(LocationUtils.getCentre(blockLoc), LocationUtils.getCentre(nearestSpawner.getLocation()), 0.1 * blockLoc.distance(nearestSpawner.getLocation()), ParticleDisplay.colored(blockLoc, java.awt.Color.RED, 1));
+                XParticle.line(LocationUtils.getCenter(blockLoc), LocationUtils.getCenter(nearestSpawner.getLocation()), 0.1 * blockLoc.distance(nearestSpawner.getLocation()), ParticleDisplay.colored(blockLoc, java.awt.Color.RED, 1));
                 e.setCancelled(true);
             }
         }
@@ -163,7 +163,7 @@ public class Listeners implements Listener {
                     }
                 }
             }
-        }.runTaskTimer(NoMobLag.getInstance(), 0, 1);
+        }.runTaskTimer(NoMobLag.instance(), 0, 1);
     }
 
     //Enforce mob (un)freezing on chunk load
@@ -196,7 +196,7 @@ public class Listeners implements Listener {
                     }
                 }
             }
-        }.runTaskAsynchronously(NoMobLag.getInstance());
+        }.runTaskAsynchronously(NoMobLag.instance());
 
         //Unfreeze all existing mobs if enable-freezing is disabled in config
         if (!ConfigManager.getInstance().getBool("mob-freezing.enable-freezing")) {
@@ -207,7 +207,7 @@ public class Listeners implements Listener {
                         mob.setAI(true);
                     }
                 }
-            }.runTaskAsynchronously(NoMobLag.getInstance());
+            }.runTaskAsynchronously(NoMobLag.instance());
         } else {
             //Do not unfreeze mobs on chunk load if defined in config
             if (!ConfigManager.getInstance().getBool("mob-freezing.enable-ai-on-chunk-load")) {
@@ -230,7 +230,7 @@ public class Listeners implements Listener {
                         }
                     }
                 }
-            }.runTask(NoMobLag.getInstance());
+            }.runTask(NoMobLag.instance());
         }
     }
 
@@ -429,7 +429,7 @@ public class Listeners implements Listener {
                     spawner.setDelay((int) Math.ceil(60 * 20 / ConfigManager.getInstance().getInt("spawners.max-mobs-per-minute")));
                 }
             }
-        }.runTask(NoMobLag.getInstance());
+        }.runTask(NoMobLag.instance());
 
         //Handle mob despawning
         if (ConfigManager.getInstance().getInt("spawners.mob-despawn-rate") < 0) {
